@@ -8,14 +8,14 @@
         <GuiElement profile="fs25_dialogContentContainer">
             <Text profile="dialogTitle" text="$l10n_ui_productionDlg_title" id="dialogTitleElement" position="0px -30px" />
 
-     
+            <!-- Standard fill-type / recipe header -->
             <Bitmap profile="ProductionDlgList" id="tableHeaderBox" position="45px -80px" size="1250px 50px">
                 <Text profile="ProductionDlgHeaderLeft" position="15px 0px" size="250px 40.77px" text="$l10n_ui_productionDlg_hbName" id="nameHeader"/>
                 <Text profile="ProductionDlgHeaderLeft" position="280px 0px" size="400px 40.77px" text="$l10n_ui_productionDlg_hbInputs" id="fillTypeHeader"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
-      
+            <!-- Finance header -->
             <Bitmap profile="ProductionDlgList" id="financeHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
                 <Text profile="ProductionDlgHeaderLeft" position="15px 0px" size="250px 40.77px" text="$l10n_ui_productionDlg_hbName"/>
                 <Text profile="ProductionDlgHeaderLeft" position="275px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbRevenue"/>
@@ -24,7 +24,7 @@
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
-          
+            <!-- Logistics header -->
             <Bitmap profile="ProductionDlgList" id="logisticsHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
                 <Text profile="ProductionDlgHeaderLeft" position="15px 0px" size="250px 40.77px" text="$l10n_ui_productionDlg_hbName"/>
                 <Text profile="ProductionDlgHeaderLeft" position="275px 0px" size="150px 40.77px" text="$l10n_ui_productionDlg_hbRecipe"/>
@@ -35,62 +35,74 @@
                 <Text profile="ProductionDlgHeaderLeft" position="1175px 0px" size="70px 40.77px" text="$l10n_ui_productionDlg_hbStatus"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
+
+            <!-- Schedule view header -->
+            <Bitmap profile="ProductionDlgList" id="scheduleHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
+                <Text profile="ProductionDlgHeaderLeft" position="15px 0px"  size="250px 40.77px" text="$l10n_PS_COL_MONTH"/>
+                <Text profile="ProductionDlgHeaderLeft" position="280px 0px" size="400px 40.77px" text="$l10n_PS_COL_STATE"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px"/>
+            </Bitmap>
            
             <SmoothList profile="ProductionDlgList" id="overviewTable" position="50px -135px" size="1245px 540px" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil">
-                <ListItem profile="ProductionDlgListItem" name="orderRowTemplate" size="1250px 70px">
+                <ListItem profile="ProductionDlgListItem" name="orderRowTemplate" size="1250px 70px" onClick="onClickTableRow">
                   
                     <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 70px" name="productionName" textLayoutMode="scrolling"/>
                     
-                    
-                    <Bitmap position="275px 8px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" />
+                    <Bitmap position="275px 0px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
                     
-                    <Bitmap position="475px 8px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" />
+                    <Bitmap position="475px 0px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
                     
-                    <Bitmap position="675px 8px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" />
+                    <Bitmap position="675px 0px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
                     
-                    <Bitmap position="875px 8px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" />
+                    <Bitmap position="875px 0px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
                     
-                    <Bitmap position="1015px 8px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" />
+                    <Bitmap position="1015px 0px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px"/>
 
-                  
-                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" />
+                    <Bitmap position="275px 35px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
                     
-                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" />
+                    <Bitmap position="475px 35px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
                     
-                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" />
+                    <Bitmap position="675px 35px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
                     
-                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" />
+                    <Bitmap position="875px 35px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
                     
-                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" />
+                    <Bitmap position="1015px 35px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
                     
-                   
                     <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="70px 70px" name="statusText" textSize="12px"/>
                 </ListItem>
             </SmoothList>
 
-            
             <ThreePartBitmap profile="fs25_listSliderBox" position="-35px -50px" size="12px 545px" with="anchorTopRight">
                 <Slider profile="fs25_listSlider" size="6px 537px" dataElementId="overviewTable" id="tableSlider" />
             </ThreePartBitmap>
         </GuiElement>
 
-       
         <BoxLayout profile="fs25_dialogButtonBox" size="1250px 60px">
+            <!-- Visible on all non-logistics pages; repurposed by inputEvent on logistics page -->
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowOutputs" onClick="onClickToggle" id="toggleButton" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowRecipes" onClick="onClickRecipes" id="recipeButton" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowFinances" onClick="onClickFinances" id="financesButton" />
+            <!-- Context buttons: visible only when a logistics row is selected -->
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnChangeOutput" onClick="onClickChangeOutput" id="changeOutputButton" visible="false" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnActivate" onClick="onClickToggleRecipe" id="toggleRecipeButton" visible="false" />
+            <!-- Schedule button: visible only on logistics page when a recipe row is selected -->
+            <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnSchedule" onClick="onClickSchedule" id="scheduleButton" visible="false" />
+            <!-- Schedule page buttons: visible only when schedule view is active -->
+            <Button profile="buttonOK" text="$l10n_PS_BTN_ALL_TOGGLE" onClick="onClickAllMonths" id="allMonthsButton" visible="false" />
+            <Button profile="buttonOK" text="$l10n_PS_BTN_SCHED_TOGGLE" onClick="onClickSchedEnable" id="schedEnableButton" visible="false" />
+            <Button profile="buttonActivate" text="$l10n_button_ok" onClick="onClickCommitSchedule" id="commitScheduleButton" visible="false" />
+            <Button profile="buttonBack" text="$l10n_button_cancel" onClick="onClickCancelSchedule" id="cancelScheduleButton" visible="false" />
+            <!-- Always-visible navigation buttons -->
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowLogistics" onClick="onClickLogistics" id="logisticsButton" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnExportCSV" onClick="onClickExportCSV" id="exportButton" />
             <Button profile="buttonBack" text="$l10n_ui_productionDlg_btnClose" onClick="onClickBack" />

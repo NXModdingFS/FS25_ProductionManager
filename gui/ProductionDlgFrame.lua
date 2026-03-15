@@ -11,6 +11,7 @@ function ProductionDlgFrame.new(target, custom_mt)
 	self.showLogistics = false
 	self.selectedLogisticsRow = nil
 	self.selectedRecipeRow = nil
+	self.showSchedule = false
 	return self
 end
 
@@ -57,8 +58,31 @@ function ProductionDlgFrame:onOpen()
 		self.toggleRecipeButton:setVisible(false)
 	end
 	
+	-- Schedule button: shown on logistics page when a recipe row is selected
+	if self.scheduleButton ~= nil then
+		self.scheduleButton:setInputAction(InputAction.MENU_EXTRA_1)
+		self.scheduleButton:setVisible(false)
+	end
+	
 	if self.exportButton ~= nil then
 		self.exportButton:setInputAction(InputAction.MENU_ACTIVATE)
+	end
+
+	-- Schedule page buttons (hidden until schedule view is active)
+	if self.allMonthsButton ~= nil then
+		self.allMonthsButton:setVisible(false)
+	end
+	if self.schedEnableButton ~= nil then
+		self.schedEnableButton:setVisible(false)
+	end
+	if self.commitScheduleButton ~= nil then
+		self.commitScheduleButton:setVisible(false)
+	end
+	if self.cancelScheduleButton ~= nil then
+		self.cancelScheduleButton:setVisible(false)
+	end
+	if self.scheduleHeaderBox ~= nil then
+		self.scheduleHeaderBox:setVisible(false)
 	end
 
 	self:setSoundSuppressed(true)
@@ -80,34 +104,285 @@ function ProductionDlgFrame:inputEvent(action, value, eventUsed)
 	end
 	
 	if action == InputAction.MENU_EXTRA_1 then
-		self:onClickToggle()
+		-- Schedule page: All-months toggle.  Other pages: Inputs/Outputs toggle or Schedule open
+		if self.showSchedule then
+			self:onClickAllMonths()
+		elseif self.showLogistics then
+			self:onClickSchedule()
+		else
+			self:onClickToggle()
+		end
 		return true
 	elseif action == InputAction.MENU_EXTRA_2 then
-		self:onClickRecipes()
+		if self.showSchedule then
+			self:onClickSchedEnable()
+		else
+			self:onClickRecipes()
+		end
 		return true
 	elseif action == InputAction.MENU_PAGE_PREV then
-		self:onClickFinances()
+		if not self.showSchedule then
+			self:onClickFinances()
+		end
 		return true
 	elseif action == InputAction.MENU_PAGE_NEXT then
-		self:onClickLogistics()
+		if not self.showSchedule then
+			self:onClickLogistics()
+		end
 		return true
 	elseif action == InputAction.MENU_ACCEPT then
-		if self.showLogistics then
+		if self.showSchedule then
+			-- Toggle currently focused month
+			local idx = self.overviewTable:getSelectedIndexInSection()
+			if idx ~= nil then
+				local row = self.displayRows[idx]
+				if row and row.rowType == "schedule" then
+					self:toggleScheduleMonth(row.monthIdx)
+				end
+			end
+			return true
+		elseif self.showLogistics then
 			self:onClickChangeOutput()
 			return true
 		end
 	elseif action == InputAction.MENU_CANCEL then
-		if self.showRecipes then
+		if self.showSchedule then
+			self:onClickCancelSchedule()
+			return true
+		elseif self.showRecipes then
 			self:onClickToggleRecipe()
 			return true
 		end
 	elseif action == InputAction.MENU_ACTIVATE then
-		self:onClickExportCSV()
+		if self.showSchedule then
+			self:onClickCommitSchedule()
+		else
+			self:onClickExportCSV()
+		end
 		return true
 	end
 
 	return ProductionDlgFrame:superClass().inputEvent(self, action, value, eventUsed)
 end
+
+-- ============================================================
+-- Schedule Button
+-- ============================================================
+
+-- Returns (production, productionPoint) for the currently selected logistics row.
+-- Used by the Schedule button to know which production to open the dialog for.
+function ProductionDlgFrame:getSelectedProduction()
+	if self.selectedLogisticsRow == nil then return nil, nil end
+	local row            = self.selectedLogisticsRow
+	local productionPoint = row.production.productionPoint
+	local recipeName     = row.logistic.recipe
+	if productionPoint == nil or productionPoint.productions == nil then
+		return nil, productionPoint
+	end
+	for _, prod in pairs(productionPoint.productions) do
+		if prod.name == recipeName then
+			return prod, productionPoint
+		end
+	end
+	return nil, productionPoint
+end
+
+function ProductionDlgFrame:onClickSchedule()
+	if ProductionScheduleManager == nil then return end
+	local production, productionPoint = self:getSelectedProduction()
+	if production == nil or productionPoint == nil then return end
+
+	local pointKey = ProductionScheduleManager:getPointKey(productionPoint)
+	if pointKey == nil then return end
+
+	local prodId   = tostring(production.id)
+	local prodName = production.name or prodId
+
+	local entry = ProductionScheduleManager:getEntry(pointKey, prodId)
+	if entry == nil then entry = {months = {}, scheduleEnabled = false} end
+
+	-- Copy months table so edits don't touch live data until commit
+	local months = {}
+	for k, v in pairs(entry.months) do months[k] = v end
+
+	-- Write context fields that commitFromUI() will read
+	ProductionScheduleManager.ctxPointKey        = pointKey
+	ProductionScheduleManager.ctxProdId          = prodId
+	ProductionScheduleManager.ctxProdName        = prodName
+	ProductionScheduleManager.ctxMonths          = months
+	ProductionScheduleManager.ctxScheduleEnabled = (entry.scheduleEnabled == true)
+
+	self.showSchedule = true
+	self:enterScheduleView()
+end
+
+function ProductionDlgFrame:enterScheduleView()
+	-- Hide all standard-page and logistics-page buttons
+	if self.toggleButton       ~= nil then self.toggleButton:setVisible(false) end
+	if self.recipeButton       ~= nil then self.recipeButton:setVisible(false) end
+	if self.financesButton     ~= nil then self.financesButton:setVisible(false) end
+	if self.logisticsButton    ~= nil then self.logisticsButton:setVisible(false) end
+	if self.changeOutputButton ~= nil then self.changeOutputButton:setVisible(false) end
+	if self.toggleRecipeButton ~= nil then self.toggleRecipeButton:setVisible(false) end
+	if self.scheduleButton     ~= nil then self.scheduleButton:setVisible(false) end
+	if self.exportButton       ~= nil then self.exportButton:setVisible(false) end
+
+	-- Show schedule-page buttons
+	if self.allMonthsButton       ~= nil then self.allMonthsButton:setVisible(true) end
+	if self.schedEnableButton     ~= nil then self.schedEnableButton:setVisible(true) end
+	if self.commitScheduleButton  ~= nil then self.commitScheduleButton:setVisible(true) end
+	if self.cancelScheduleButton  ~= nil then self.cancelScheduleButton:setVisible(true) end
+
+	-- Swap header boxes
+	if self.tableHeaderBox     ~= nil then self.tableHeaderBox:setVisible(false) end
+	if self.financeHeaderBox   ~= nil then self.financeHeaderBox:setVisible(false) end
+	if self.logisticsHeaderBox ~= nil then self.logisticsHeaderBox:setVisible(false) end
+	if self.scheduleHeaderBox  ~= nil then self.scheduleHeaderBox:setVisible(true) end
+
+	-- Update dialog title to show the production name
+	if self.dialogTitleElement ~= nil and ProductionScheduleManager ~= nil then
+		local name = ProductionScheduleManager.ctxProdName
+		             or ProductionScheduleManager.ctxProdId
+		             or "?"
+		self.dialogTitleElement:setText(g_i18n:getText("PS_DIALOG_TITLE"):format(tostring(name)))
+	end
+
+	self:updateAllMonthsButtonText()
+	self:updateSchedEnableButtonText()
+	self:buildDisplayRows()
+	self.overviewTable:reloadData()
+	if self.overviewTable.setSelectedIndex ~= nil then
+		self.overviewTable:setSelectedIndex(1, true)
+	end
+end
+
+function ProductionDlgFrame:exitScheduleView()
+	self.showSchedule = false
+
+	-- Restore export button
+	if self.exportButton ~= nil then self.exportButton:setVisible(true) end
+
+	-- Hide schedule-page buttons
+	if self.allMonthsButton      ~= nil then self.allMonthsButton:setVisible(false) end
+	if self.schedEnableButton    ~= nil then self.schedEnableButton:setVisible(false) end
+	if self.commitScheduleButton ~= nil then self.commitScheduleButton:setVisible(false) end
+	if self.cancelScheduleButton ~= nil then self.cancelScheduleButton:setVisible(false) end
+	if self.scheduleHeaderBox    ~= nil then self.scheduleHeaderBox:setVisible(false) end
+
+	-- Restore dialog title
+	if self.dialogTitleElement ~= nil then
+		self.dialogTitleElement:setText(g_i18n:getText("ui_productionDlg_title"))
+	end
+
+	-- Re-enter logistics page (that's where the user came from)
+	self.showLogistics = true
+	if self.logisticsButton ~= nil then
+		self.logisticsButton:setText(g_i18n:getText("ui_productionDlg_btnHideLogistics"))
+		self.logisticsButton:setVisible(true)
+	end
+	if self.logisticsHeaderBox ~= nil then self.logisticsHeaderBox:setVisible(true) end
+
+	self:loadProductionData()
+	self:buildDisplayRows()
+	self.overviewTable:reloadData()
+end
+
+-- ============================================================
+-- Schedule View – Month Toggle Helpers
+-- ============================================================
+
+function ProductionDlgFrame:buildScheduleRows()
+	self.displayRows = {}
+	local months = (ProductionScheduleManager ~= nil and ProductionScheduleManager.ctxMonths) or {}
+	for i = 1, 12 do
+		table.insert(self.displayRows, {
+			rowType   = "schedule",
+			monthIdx  = i,
+			monthName = g_i18n:getText("PS_MONTH_" .. i),
+			enabled   = (months[i] == true)
+		})
+	end
+end
+
+function ProductionDlgFrame:toggleScheduleMonth(idx)
+	if ProductionScheduleManager == nil or idx == nil then return end
+	local months = ProductionScheduleManager.ctxMonths or {}
+	months[idx] = not (months[idx] == true)
+	ProductionScheduleManager.ctxMonths = months
+	self:buildDisplayRows()
+	self.overviewTable:reloadData()
+	if self.overviewTable.setSelectedIndex ~= nil then
+		self.overviewTable:setSelectedIndex(idx, true)
+	end
+	self:updateAllMonthsButtonText()
+end
+
+function ProductionDlgFrame:onClickTableRow(element)
+	if not self.showSchedule then return end
+	if element == nil then return end
+	local idx = element.psMonthIdx
+	if idx == nil then return end
+	self:toggleScheduleMonth(idx)
+end
+
+function ProductionDlgFrame:onClickAllMonths()
+	if ProductionScheduleManager == nil then return end
+	local months = ProductionScheduleManager.ctxMonths or {}
+	local allOn  = true
+	for i = 1, 12 do
+		if months[i] ~= true then allOn = false; break end
+	end
+	local newValue = not allOn
+	for i = 1, 12 do months[i] = newValue end
+	ProductionScheduleManager.ctxMonths = months
+	self:buildDisplayRows()
+	self.overviewTable:reloadData()
+	self:updateAllMonthsButtonText()
+end
+
+function ProductionDlgFrame:onClickSchedEnable()
+	if ProductionScheduleManager == nil then return end
+	ProductionScheduleManager.ctxScheduleEnabled = not (ProductionScheduleManager.ctxScheduleEnabled == true)
+	self:updateSchedEnableButtonText()
+end
+
+function ProductionDlgFrame:onClickCommitSchedule()
+	if ProductionScheduleManager ~= nil then
+		ProductionScheduleManager:commitFromUI()
+	end
+	self:exitScheduleView()
+end
+
+function ProductionDlgFrame:onClickCancelSchedule()
+	-- Discard in-progress changes; context is abandoned on exit
+	self:exitScheduleView()
+end
+
+function ProductionDlgFrame:updateAllMonthsButtonText()
+	if self.allMonthsButton == nil or ProductionScheduleManager == nil then return end
+	local months = ProductionScheduleManager.ctxMonths or {}
+	local allOn  = true
+	for i = 1, 12 do
+		if months[i] ~= true then allOn = false; break end
+	end
+	self.allMonthsButton:setText(
+		allOn and g_i18n:getText("PS_BTN_ALL_TOGGLE_OFF")
+		       or g_i18n:getText("PS_BTN_ALL_TOGGLE_ON")
+	)
+end
+
+function ProductionDlgFrame:updateSchedEnableButtonText()
+	if self.schedEnableButton == nil or ProductionScheduleManager == nil then return end
+	local enabled = (ProductionScheduleManager.ctxScheduleEnabled == true)
+	local stateKey = enabled and "PS_STATE_ACTIVE" or "PS_STATE_INACTIVE"
+	self.schedEnableButton:setText(
+		g_i18n:getText("PS_BTN_SCHED_TOGGLE") .. ": " .. g_i18n:getText(stateKey)
+	)
+end
+
+-- ============================================================
+-- Distribution / Output helpers
+-- ============================================================
 
 function ProductionDlgFrame:getDistributionDestination(sourceProduction, fillType)
 	if sourceProduction == nil or fillType == nil then
@@ -160,6 +435,10 @@ function ProductionDlgFrame:getDistributionDestination(sourceProduction, fillTyp
 	return nil
 end
 
+-- ============================================================
+-- Data Loading
+-- ============================================================
+
 function ProductionDlgFrame:loadProductionData()
 	self.productions = {}
 
@@ -181,7 +460,7 @@ function ProductionDlgFrame:loadProductionData()
 				end
 
 				if hasActiveProduction then
-		
+			
 					local modeIndicator = ""
 					if productionPoint.sharedThroughputCapacity ~= nil then
 						modeIndicator = productionPoint.sharedThroughputCapacity and " (S)" or " (P)"
@@ -359,7 +638,7 @@ function ProductionDlgFrame:loadProductionData()
 									end
 								end
 								
-						
+							
 								if production.outputs ~= nil and #production.outputs > 0 then
 									local output = production.outputs[1]
 									local fillType = output.type
@@ -398,6 +677,16 @@ function ProductionDlgFrame:loadProductionData()
 								destination = "-"
 								destinationColor = {0.5, 0.5, 0.5, 1}
 							end
+
+							-- Build schedule indicator for the logistics row
+							local scheduleIndicator = ""
+							if ProductionScheduleManager ~= nil then
+								local pointKey = ProductionScheduleManager:getPointKey(productionPoint)
+								local entry    = ProductionScheduleManager:getEntry(pointKey, production.id)
+								if entry ~= nil and entry.scheduleEnabled then
+									scheduleIndicator = " [S]"
+								end
+							end
 							
 							table.insert(prodData.logistics, {
 								recipe = fullName,
@@ -407,7 +696,9 @@ function ProductionDlgFrame:loadProductionData()
 								destination = destination,
 								destinationColor = destinationColor,
 								outputFillTypeInfo = outputFillTypeInfo,
-								isActive = production.status == ProductionPoint.PROD_STATUS.RUNNING
+								isActive = production.status == ProductionPoint.PROD_STATUS.RUNNING,
+								scheduleIndicator = scheduleIndicator,
+								production = production
 							})
 						end
 					end
@@ -462,6 +753,12 @@ end
 
 function ProductionDlgFrame:buildDisplayRows()
 	self.displayRows = {}
+
+	-- Schedule view: show 12 month rows instead of production data
+	if self.showSchedule then
+		self:buildScheduleRows()
+		return
+	end
 
 	for _, prod in ipairs(self.productions) do
 		if self.showLogistics then
@@ -518,6 +815,10 @@ function ProductionDlgFrame:buildDisplayRows()
 	end
 end
 
+-- ============================================================
+-- Button Text Helpers
+-- ============================================================
+
 function ProductionDlgFrame:updateToggleButtonText()
 	if self.toggleButton ~= nil then
 		if self.showInputs then
@@ -545,6 +846,10 @@ function ProductionDlgFrame:updateRecipeButtonText()
 		end
 	end
 end
+
+-- ============================================================
+-- Button Click Handlers
+-- ============================================================
 
 function ProductionDlgFrame:onClickToggleRecipe()
     if self.selectedRecipeRow == nil then
@@ -719,6 +1024,7 @@ function ProductionDlgFrame:onClickLogistics()
 		end
 	end
 	
+	-- Toggle button repurposed as Schedule button on logistics page
 	if self.toggleButton ~= nil then
 		self.toggleButton:setVisible(not self.showLogistics)
 	end
@@ -733,6 +1039,10 @@ function ProductionDlgFrame:onClickLogistics()
 	end
 	if self.toggleRecipeButton ~= nil then
 		self.toggleRecipeButton:setVisible(false)
+	end
+	-- Schedule button: only visible when logistics is active AND a row is selected
+	if self.scheduleButton ~= nil then
+		self.scheduleButton:setVisible(false)
 	end
 	
 	if self.tableHeaderBox ~= nil then
@@ -888,6 +1198,10 @@ function ProductionDlgFrame:onClickExportCSV()
 	InfoDialog.show(string.format("Export Successful!\n\nExported to:\n%s", filename))
 end
 
+-- ============================================================
+-- SmoothList Callbacks
+-- ============================================================
+
 function ProductionDlgFrame:getNumberOfItemsInSection(list, section)
 	if list == self.overviewTable then
 		return #self.displayRows
@@ -905,6 +1219,11 @@ function ProductionDlgFrame:onListSelectionChanged(list, section, index)
 				
 				if self.changeOutputButton ~= nil then
 					self.changeOutputButton:setVisible(true)
+				end
+				
+				-- Show schedule button when a recipe row is selected on the logistics page
+				if self.scheduleButton ~= nil then
+					self.scheduleButton:setVisible(true)
 				end
 				
 				if self.toggleRecipeButton ~= nil then
@@ -950,6 +1269,10 @@ function ProductionDlgFrame:onListSelectionChanged(list, section, index)
 				if self.toggleRecipeButton ~= nil then
 					self.toggleRecipeButton:setVisible(false)
 				end
+				-- Hide schedule button when no recipe row is selected
+				if self.scheduleButton ~= nil then
+					self.scheduleButton:setVisible(false)
+				end
 			end
 		else
 			self.selectedRecipeRow = nil
@@ -959,6 +1282,9 @@ function ProductionDlgFrame:onListSelectionChanged(list, section, index)
 			end
 			if self.changeOutputButton ~= nil then
 				self.changeOutputButton:setVisible(false)
+			end
+			if self.scheduleButton ~= nil then
+				self.scheduleButton:setVisible(false)
 			end
 		end
 	end
@@ -973,6 +1299,33 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 
 		local prod = row.production
 		local currencySymbol = g_i18n:getCurrencySymbol(true)
+
+		-- Schedule view: render a single month row
+		if row.rowType == "schedule" then
+			cell.psMonthIdx = row.monthIdx
+
+			cell:getAttribute("productionName"):setText(row.monthName or "?")
+			cell:getAttribute("productionName"):setVisible(true)
+			cell:getAttribute("statusText"):setVisible(false)
+
+			-- Show status in first text column
+			local active     = (row.enabled == true)
+			local statusText = active and g_i18n:getText("PS_STATE_ACTIVE") or g_i18n:getText("PS_STATE_INACTIVE")
+			cell:getAttribute("fillIcon1"):setVisible(false)
+			cell:getAttribute("fillCapacity1"):setText(statusText)
+			if active then
+				cell:getAttribute("fillCapacity1"):setTextColor(0.1, 0.7, 0.1, 1)
+			else
+				cell:getAttribute("fillCapacity1"):setTextColor(0.7, 0.2, 0.2, 1)
+			end
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+
+			for i = 2, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
 
 		if row.rowType == "logistics_gap" then
 			cell:getAttribute("productionName"):setText("")
@@ -1010,14 +1363,12 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			else
 				local logistic = row.logistic
 				
-				
 				local recipeStatus = g_i18n:getText("ui_prodmgr_status_inactive")
 				local statusColor = {1, 0, 0, 1} 
 
 				local productionPoint = prod.productionPoint
 				if productionPoint and productionPoint.productions then
 					for _, production in pairs(productionPoint.productions) do
-						
 						if production.name == logistic.recipe then
 							if production.status == ProductionPoint.PROD_STATUS.RUNNING then
 								recipeStatus = g_i18n:getText("ui_prodmgr_status_active")
@@ -1030,8 +1381,12 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 						end
 					end
 				end
-								
 				
+				-- Append schedule indicator [S] to status if scheduled
+				if logistic.scheduleIndicator and logistic.scheduleIndicator ~= "" then
+					recipeStatus = recipeStatus .. logistic.scheduleIndicator
+				end
+							
 				cell:getAttribute("statusText"):setText(recipeStatus)
 				cell:getAttribute("statusText"):setTextColor(statusColor[1], statusColor[2], statusColor[3], statusColor[4])
 				cell:getAttribute("statusText"):setVisible(true)
