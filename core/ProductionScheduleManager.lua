@@ -27,10 +27,6 @@ ProductionScheduleManager.runtime = {}
 
 ProductionScheduleManager.lastPeriod = nil
 
--- ============================================================
--- Internal Helpers
--- ============================================================
-
 local function resolvePeriod()
     if g_currentMission == nil or g_currentMission.environment == nil then return nil end
     local env = g_currentMission.environment
@@ -56,8 +52,6 @@ local function getPointKey(pp)
     return tostring(pp)
 end
 
--- Returns true if the production is allowed to run during the given period.
--- An empty months table means no restriction (always allowed).
 local function isAllowedInPeriod(monthTable, period)
     if monthTable == nil then return true end
     local any = false
@@ -85,33 +79,33 @@ local function normalizeEntry(rawEntry)
     return entry
 end
 
--- ============================================================
--- Savegame Persistence
--- ============================================================
-
-local function buildSavePath(dirOverride)
-    local dir = dirOverride
-        or (g_currentMission and g_currentMission.missionInfo and g_currentMission.missionInfo.savegameDirectory)
-    if dir == nil or dir == "" then return nil end
-    return dir .. "/productionSchedule.xml"
+local function getModSettingsPath()
+    return Utils.getFilename("modSettings/ProductionSettings.xml", getUserProfileAppPath())
 end
 
-function ProductionScheduleManager:save(dirOverride)
-    local path = buildSavePath(dirOverride)
-    if path == nil then
-        print("[ProductionManager] Schedule save skipped - savegame directory not ready")
-        return false
+function ProductionScheduleManager:save()
+    local path = getModSettingsPath()
+
+    createFolder(getUserProfileAppPath() .. "modSettings/")
+
+    local xmlFile
+    if fileExists(path) then
+        xmlFile = loadXMLFile("ProductionScheduleXML", path)
+    else
+        xmlFile = createXMLFile("ProductionScheduleXML", path, "production")
     end
 
-    local xmlFile = createXMLFile("productionSchedule", path, "productionSchedule")
-    if xmlFile == nil then return false end
+    if xmlFile == nil or xmlFile == 0 then
+        print("[ProductionManager] Schedule save failed - could not open modSettings XML")
+        return false
+    end
 
     local i = 0
     for pointKey, prodTable in pairs(self.data) do
         local hasAny = false
         for _ in pairs(prodTable) do hasAny = true; break end
         if hasAny then
-            local pBase = string.format("productionSchedule.point(%d)", i)
+            local pBase = string.format("production.schedules.point(%d)", i)
             setXMLString(xmlFile, pBase .. "#key", pointKey)
             local j = 0
             for prodId, rawEntry in pairs(prodTable) do
@@ -138,28 +132,16 @@ function ProductionScheduleManager:save(dirOverride)
 end
 
 function ProductionScheduleManager:load()
-    -- Build candidate paths: current savegame dir first, then stable slot folder
-    local paths = {}
-    local dir = g_currentMission and g_currentMission.missionInfo and g_currentMission.missionInfo.savegameDirectory
-    if dir then table.insert(paths, dir .. "/productionSchedule.xml") end
-    local idx = g_currentMission and g_currentMission.missionInfo and g_currentMission.missionInfo.savegameIndex
-    if idx ~= nil then
-        table.insert(paths, getUserProfileAppPath() .. string.format("savegame%d/productionSchedule.xml", idx))
-    end
+    local path = getModSettingsPath()
+    if not fileExists(path) then return end
 
-    local path = nil
-    for _, p in ipairs(paths) do
-        if p ~= nil and fileExists(p) then path = p; break end
-    end
-    if path == nil then return end
-
-    local xmlFile = loadXMLFile("productionSchedule", path)
-    if xmlFile == nil then return end
+    local xmlFile = loadXMLFile("ProductionScheduleXML", path)
+    if xmlFile == nil or xmlFile == 0 then return end
 
     self.data = {}
     local i = 0
     while true do
-        local pBase = string.format("productionSchedule.point(%d)", i)
+        local pBase = string.format("production.schedules.point(%d)", i)
         if not hasXMLProperty(xmlFile, pBase) then break end
         local key = getXMLString(xmlFile, pBase .. "#key")
         if key ~= nil then
@@ -188,12 +170,8 @@ function ProductionScheduleManager:load()
         i = i + 1
     end
     delete(xmlFile)
-    print("[ProductionManager] Schedule data loaded from " .. path)
+    print("[ProductionManager] Schedule data loaded from modSettings/ProductionSettings.xml")
 end
-
--- ============================================================
--- Runtime Map
--- ============================================================
 
 function ProductionScheduleManager:rebuildRuntimeMap()
     self.runtime = {}
@@ -214,10 +192,6 @@ function ProductionScheduleManager:rebuildRuntimeMap()
         end
     end
 end
-
--- ============================================================
--- Schedule Enforcement
--- ============================================================
 
 function ProductionScheduleManager:applyAll(period)
     if period == nil then return end
@@ -244,10 +218,6 @@ function ProductionScheduleManager:applyAll(period)
     end
 end
 
--- ============================================================
--- Public API (used by AutoManager and Dialog)
--- ============================================================
-
 function ProductionScheduleManager:getPointKey(pp)
     return getPointKey(pp)
 end
@@ -256,8 +226,6 @@ function ProductionScheduleManager:getCurrentPeriod()
     return resolvePeriod()
 end
 
--- Returns a normalized entry or nil. Used by AutoManager to check if a
--- production is outside its scheduled months before attempting auto-restart.
 function ProductionScheduleManager:getEntry(pointKey, prodId)
     if self.data == nil or pointKey == nil or prodId == nil then return nil end
     local pk = tostring(pointKey)
@@ -266,9 +234,6 @@ function ProductionScheduleManager:getEntry(pointKey, prodId)
     return normalizeEntry(self.data[pk][id])
 end
 
--- ============================================================
--- Commit from Dialog (called by ProductionDlgFrame on OK)
--- ============================================================
 
 function ProductionScheduleManager:commitFromUI()
     local pointKey    = self.ctxPointKey
@@ -298,25 +263,16 @@ function ProductionScheduleManager:commitFromUI()
     self:applyAll(resolvePeriod())
 end
 
--- ============================================================
--- Save Hooks (piggyback on Mission00.saveToXMLFile)
--- ============================================================
-
 function ProductionScheduleManager:_installSaveHooks()
     if self._saveHooksInstalled then return end
     self._saveHooksInstalled = true
 
     if Mission00 ~= nil and Mission00.saveToXMLFile ~= nil then
-        Mission00.saveToXMLFile = Utils.appendedFunction(Mission00.saveToXMLFile, function(mission)
-            local dir = mission and mission.missionInfo and mission.missionInfo.savegameDirectory
-            if dir then ProductionScheduleManager:save(dir) end
+        Mission00.saveToXMLFile = Utils.appendedFunction(Mission00.saveToXMLFile, function()
+            ProductionScheduleManager:save()
         end)
     end
 end
-
--- ============================================================
--- Lifecycle (ModEventListener)
--- ============================================================
 
 function ProductionScheduleManager:loadMap(name)
     self:load()

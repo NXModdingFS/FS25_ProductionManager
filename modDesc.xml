@@ -15,7 +15,7 @@ Features:
 • Toggle Views: Switch between inputs, outputs, and recipes
 • Financial Tracking: See monthly revenue, costs, and net profit for each production
 • Logistics Page: Overview of all production's and their recipies includes, Supply Duration, Cycles/MO, Output Mode, Location, Status
-• Production Scheduling: Set active months per recipe — productions outside their scheduled months are automatically paused and resumed
+• Production Scheduling: Set active months per recipe — productions outside their scheduled months are automatically paused and resumed.
 • Auto-Management: Automatically activate/deactivate productions based on input availability and output capacity
 • Smart Notifications: Get alerts when productions stop/start or when inputs are low/outputs are high
 • CSV Export: Export all production data for external analysis
@@ -33,7 +33,7 @@ Funktionen:
 • Ansichten umschalten: Zwischen Eingängen, Ausgängen und Rezepten wechseln
 • Logistikverfolgung: Ausgabezyklen, Standort, Status, Rezeptname und Verteilungsziel anzeigen
 • Finanzverfolgung: Monatliche Einnahmen, Kosten und Nettogewinn jeder Produktion anzeigen
-• Produktionsplanung: Aktive Monate pro Rezept festlegen — außerhalb des Zeitplans werden Produktionen automatisch pausiert
+• Produktionsplanung: Aktive Monate pro Rezept festlegen — außerhalb des Zeitplans werden Produktionen automatisch pausiert.
 • Automatische Verwaltung: Produktionen basierend auf Eingangsverfügbarkeit und Ausgangskapazität automatisch aktivieren/deaktivieren
 • Intelligente Benachrichtigungen: Warnungen erhalten, wenn Produktionen stoppen/starten oder wenn Eingaben niedrig/Ausgaben hoch sind
 • CSV-Export: Alle Produktionsdaten für externe Analyse exportieren

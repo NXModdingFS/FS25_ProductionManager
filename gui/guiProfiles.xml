@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <GUIProfiles>
-
-    <!-- ============================================================ -->
-    <!-- Production Manager - Main Dialog profiles                    -->
-    <!-- ============================================================ -->
-
-    <Profile name="ProductionDlgList" extends="emptyPanel" with="anchorStretchingYLeft pivotTopLeft">
-        <textBold value="false"/>
-        <textSize value="15px"/>
-        <textAlignment value="left"/>
-        <textColor value="$preset_fs25_colorMainLight"/>
-        <textSelectedColor value="$preset_fs25_colorMainLight"/>
-        <textDisabledColor value="$preset_colorDisabled"/>
-    </Profile>
+    <Presets>
+        <Preset name="colorWhite" value="1 1 1 1"/>
+        <Preset name="colorListHeaderBackground" value="0 0 0 0.35" />
+        <Preset name="colorGold" value="1 0.85 0.1 1" />
+    </Presets>
 
     <Profile name="ProductionDlgHeaderLeft" extends="baseReference">
-        <imageColor value="0 0 0 0"/>
-        <textFocusedColor value="$preset_fs25_colorMainHighlight"/>
-        <textHighlightedColor value="$preset_fs25_colorMainHighlight"/>
-        <textSize value="16px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="left"/>
-        <textDisabledColor value="$preset_colorDisabled"/>
+        <imageColor value="0 0 0 0" />
+        <textFocusedColor value="$preset_fs25_colorMainHighlight" />
+        <textHighlightedColor value="$preset_fs25_colorMainHighlight" />
+        <textSize value="16px" />
+        <textBold value="true" />
+        <textUpperCase value="true" />
+        <textColor value="$preset_colorWhite_50" />
+        <textAlignment value="left" />
+        <textDisabledColor value="$preset_colorDisabled" />
     </Profile>
 
-    <Profile name="ProductionDlgListItem" extends="baseReference" with="anchorTopStretchingX">
-        <height value="70px"/>
-        <imageColor value="$preset_colorTransparent"/>
-        <imageSelectedColor value="$preset_fs25_colorGrey"/>
-        <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50"/>
+    <Profile name="ProductionDlgHeaderRight" extends="ProductionDlgHeaderLeft">
+        <textAlignment value="right" />
     </Profile>
+
+    <Profile name="ProductionDlgTotalIncome" extends="baseReference">
+        <imageColor value="0 0 0 0" />
+        <textSize value="20px" />
+        <textBold value="true" />
+        <textColor value="$preset_colorGold" />
+        <textAlignment value="left" />
+    </Profile>
+
+    <Profile name="ProductionDlgList" extends="emptyPanel" with="anchorStretchingYLeft pivotTopLeft">
+    </Profile>
+    
+    <Profile name="ProductionDlgListItem" extends="baseReference" with="anchorTopStretchingX alternating">
+        <height value="32px"/>
+        <imageColor value="$preset_fs25_colorGrey" />
+        <imageSelectedColor value="$preset_fs25_colorMainHighlight" />
+        <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50" />
+    </Profile> 
 
     <Profile name="ProductionDlgRowCellLeft" extends="baseReference" with="anchorStretchingYLeft">
-        <textBold value="false"/>
-        <textSize value="14px"/>
-        <textAlignment value="left"/>
-        <textVerticalAlignment value="middle"/>
-        <textColor value="$preset_fs25_colorMainLight"/>
-        <textSelectedColor value="$preset_fs25_colorMainLight"/>
-        <textDisabledColor value="$preset_colorDisabled"/>
-        <imageColor value="0 0 0 0"/>
+        <textBold value="false" />
+        <textSize value="15px" />
+        <textAlignment value="left" />
+        <textColor value="$preset_fs25_colorMainLight" />
+        <textSelectedColor value="$preset_fs25_colorMainDark" />
+        <textDisabledColor value="$preset_colorDisabled" />
+    </Profile>
+
+    <Profile name="ProductionDlgRowCellRight" extends="ProductionDlgRowCellLeft">
+        <textAlignment value="right" />
+    </Profile>
+
+    <Profile name="ProductionDlgRowCellImage" extends="baseReference" with="anchorMiddleLeft">
+        <size value="24px 24px" />
+        <position value="8px 0" />
+        <imageSliceId value="noSlice" />
     </Profile>
 
 </GUIProfiles>

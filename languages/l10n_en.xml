@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <l10n>
   <texts>
-
+    <!-- ============================================================ -->
+    <!-- Production Manager - Main Dialog UI                          -->
+    <!-- ============================================================ -->
     <text name="input_SHOW_PRODUCTION_DLG" text="Productions Manager" />
     <text name="ui_productionDlg_title" text="Productions Manager"/>
 
@@ -16,7 +18,7 @@
     <text name="ui_productionDlg_btnChangeOutput"    text="Change Output"/>
     <text name="ui_productionDlg_btnActivate"        text="Activate"/>
     <text name="ui_productionDlg_btnDeactivate"      text="Deactivate"/>
-  
+    <!-- Schedule button: only visible on the Logistics page when a recipe row is selected -->
     <text name="ui_productionDlg_btnSchedule"        text="Schedule"/>
     <text name="ui_productionDlg_btnExportCSV"       text="Export CSV"/>
     <text name="ui_productionDlg_btnClose"           text="Close"/>
@@ -35,11 +37,15 @@
     <text name="ui_productionDlg_hbOutputMode"       text="Output"/>
     <text name="ui_productionDlg_hbLocation"         text="Destination"/>
     <text name="ui_productionDlg_hbStatus"           text="Status"/>
+    <text name="ui_productionDlg_hbIngredients"      text="Ingredients"/>
 
     <!-- Row status labels -->
     <text name="ui_prodmgr_status_active"            text="Active"/>
     <text name="ui_prodmgr_status_inactive"          text="Inactive"/>
 
+    <!-- ============================================================ -->
+    <!-- Production Manager - Settings Menu                           -->
+    <!-- ============================================================ -->
     <text name="production_menu_section_title"               text="Productions Manager"/>
     <text name="production_menu_automanage"                  text="Auto-Management"/>
     <text name="production_menu_automanage_tooltip"          text="Automatically restart stopped productions when inputs are available and outputs are not full."/>
@@ -72,29 +78,36 @@
     <text name="production_setting_duration_8s"        text="8 Seconds"/>
     <text name="production_setting_duration_10s"       text="10 Seconds"/>
 
-
+    <!-- ============================================================ -->
+    <!-- Production Manager - Notifications                           -->
+    <!-- ============================================================ -->
+    <!-- %1=recipe name, %2=facility name -->
     <text name="production_notify_started"           text="%s at %s has started."/>
     <text name="production_notify_resumed"           text="%s at %s has resumed."/>
-   
+    <!-- %1=recipe name, %2=facility name, %3=reason -->
     <text name="production_notify_stopped"           text="%s at %s has stopped. Reason: %s"/>
-   
+    <!-- %1=recipe name, %2=facility name, %3=comma-separated input names -->
     <text name="production_notify_out_of_inputs"     text="%s at %s has run out of: %s"/>
     <text name="production_notify_inputs_restored"   text="%s at %s: inputs have been restocked."/>
     <text name="production_notify_low_inputs"        text="%s at %s: inputs are running low: %s"/>
     <text name="production_notify_high_outputs"      text="%s at %s: outputs are nearly full: %s"/>
 
-
+    <!-- Reason strings -->
     <text name="production_notify_reason_output_full"    text="Output storage full"/>
     <text name="production_notify_reason_out_of_inputs"  text="Out of inputs"/>
     <text name="production_notify_reason_low_inputs"     text="Inputs running low"/>
     <text name="production_notify_reason_unknown"        text="Unknown"/>
-
+    <!-- New: shown when AutoManager skips restart because of schedule -->
     <text name="production_notify_reason_scheduled"      text="Outside scheduled months"/>
 
-
+    <!-- Location fallback strings -->
     <text name="production_notify_unknown_location"      text="Unknown Location"/>
     <text name="production_notify_production_facility"   text="Production Facility"/>
 
+    <!-- ============================================================ -->
+    <!-- Production Schedule Dialog                                   -->
+    <!-- ============================================================ -->
+    <!-- %s = recipe/production name -->
     <text name="PS_DIALOG_TITLE"       text="Production Schedule: %s"/>
     <text name="PS_COL_MONTH"          text="Month"/>
     <text name="PS_COL_STATE"          text="State"/>
@@ -105,7 +118,7 @@
     <text name="PS_BTN_ALL_TOGGLE_OFF" text="All Months OFF"/>
     <text name="PS_BTN_SCHED_TOGGLE"   text="Enable / Disable Schedule"/>
 
-
+    <!-- Month names (FS25 period order: period 1 = March) -->
     <text name="PS_MONTH_1"   text="March"/>
     <text name="PS_MONTH_2"   text="April"/>
     <text name="PS_MONTH_3"   text="May"/>

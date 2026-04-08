@@ -84,6 +84,9 @@ function ProductionDlgFrame:onOpen()
 	if self.scheduleHeaderBox ~= nil then
 		self.scheduleHeaderBox:setVisible(false)
 	end
+	if self.recipeHeaderBox ~= nil then
+		self.recipeHeaderBox:setVisible(false)
+	end
 
 	self:setSoundSuppressed(true)
 	FocusManager:setFocus(self.overviewTable)
@@ -237,6 +240,7 @@ function ProductionDlgFrame:enterScheduleView()
 	if self.tableHeaderBox     ~= nil then self.tableHeaderBox:setVisible(false) end
 	if self.financeHeaderBox   ~= nil then self.financeHeaderBox:setVisible(false) end
 	if self.logisticsHeaderBox ~= nil then self.logisticsHeaderBox:setVisible(false) end
+	if self.recipeHeaderBox    ~= nil then self.recipeHeaderBox:setVisible(false) end
 	if self.scheduleHeaderBox  ~= nil then self.scheduleHeaderBox:setVisible(true) end
 
 	-- Update dialog title to show the production name
@@ -793,23 +797,44 @@ function ProductionDlgFrame:buildDisplayRows()
 			})
 		else
 			local fillTypes = self.showInputs and prod.inputFillTypes or prod.outputFillTypes
+
 			if self.showRecipes then
-				fillTypes = prod.recipes
-			end
-
-			local index = 1
-			while index <= #fillTypes do
-				local endIndex = math.min(index + 4, #fillTypes)
-
+				-- One row per recipe; ingredients display across columns
+				if #prod.recipes > 0 then
+					for i, recipe in ipairs(prod.recipes) do
+						table.insert(self.displayRows, {
+							production = prod,
+							rowType    = "recipe_row",
+							recipe     = recipe,
+							isFirst    = (i == 1)
+						})
+					end
+				else
+					table.insert(self.displayRows, {
+						production = prod,
+						rowType    = "recipe_empty",
+						isFirst    = true
+					})
+				end
 				table.insert(self.displayRows, {
 					production = prod,
-					rowType = index == 1 and "row1" or "rowN",
-					fillTypes = fillTypes,
-					startIndex = index,
-					endIndex = endIndex
+					rowType    = "recipe_gap"
 				})
+			else
+				local index = 1
+				while index <= #fillTypes do
+					local endIndex = math.min(index + 9, #fillTypes)
 
-				index = endIndex + 1
+					table.insert(self.displayRows, {
+						production = prod,
+						rowType = index == 1 and "row1" or "rowN",
+						fillTypes = fillTypes,
+						startIndex = index,
+						endIndex = endIndex
+					})
+
+					index = endIndex + 1
+				end
 			end
 		end
 	end
@@ -1015,6 +1040,7 @@ end
 function ProductionDlgFrame:onClickLogistics()
 	self.showLogistics = not self.showLogistics
 	self.selectedLogisticsRow = nil
+	self.showRecipes = false
 	
 	if self.logisticsButton ~= nil then
 		if self.showLogistics then
@@ -1050,6 +1076,9 @@ function ProductionDlgFrame:onClickLogistics()
 	end
 	if self.financeHeaderBox ~= nil then
 		self.financeHeaderBox:setVisible(false)
+	end
+	if self.recipeHeaderBox ~= nil then
+		self.recipeHeaderBox:setVisible(false)
 	end
 	if self.logisticsHeaderBox ~= nil then
 		self.logisticsHeaderBox:setVisible(self.showLogistics)
@@ -1106,15 +1135,14 @@ function ProductionDlgFrame:onClickRecipes()
 	if self.toggleRecipeButton ~= nil then
 		self.toggleRecipeButton:setVisible(false)
 	end
-	
-	if self.fillTypeHeader ~= nil then
-		if self.showRecipes then
-			self.fillTypeHeader:setText(g_i18n:getText("ui_productionDlg_hbRecipes"))
-		else
-			self:updateToggleButtonText()
-		end
+
+	-- Swap headers: recipes page uses its own header box
+	if self.tableHeaderBox ~= nil then
+		self.tableHeaderBox:setVisible(not self.showRecipes)
 	end
-	
+	if self.recipeHeaderBox ~= nil then
+		self.recipeHeaderBox:setVisible(self.showRecipes)
+	end
 	
 	self:loadProductionData()
 	self:buildDisplayRows()
@@ -1275,8 +1303,9 @@ function ProductionDlgFrame:onListSelectionChanged(list, section, index)
 				end
 			end
 		else
-			self.selectedRecipeRow = nil
 			self.selectedLogisticsRow = nil
+			self.selectedRecipeRow = nil
+
 			if self.toggleRecipeButton ~= nil then
 				self.toggleRecipeButton:setVisible(false)
 			end
@@ -1333,6 +1362,105 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			cell:getAttribute("statusText"):setVisible(false)
 			
 			for i = 1, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		-- --------------------------------------------------------
+		-- Recipe rows: one row per recipe, ingredients across columns
+		-- --------------------------------------------------------
+
+		if row.rowType == "recipe_gap" then
+			cell:getAttribute("productionName"):setText("")
+			cell:getAttribute("productionName"):setVisible(false)
+			cell:getAttribute("statusText"):setVisible(false)
+			for i = 1, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "recipe_empty" then
+			cell:getAttribute("productionName"):setText(prod.name)
+			cell:getAttribute("productionName"):setVisible(true)
+			cell:getAttribute("statusText"):setVisible(false)
+			cell:getAttribute("fillIcon1"):setVisible(false)
+			cell:getAttribute("fillCapacity1"):setText("No Recipes")
+			cell:getAttribute("fillCapacity1"):setTextColor(1, 0.5, 0, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+			for i = 2, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "recipe_row" then
+			local recipe = row.recipe
+
+			-- NAME column: facility name on first row only
+			if row.isFirst then
+				cell:getAttribute("productionName"):setText(prod.name)
+				cell:getAttribute("productionName"):setVisible(true)
+			else
+				cell:getAttribute("productionName"):setText("")
+				cell:getAttribute("productionName"):setVisible(false)
+			end
+
+			-- Status text (Active / Inactive / Active(!))
+			local recipeStatus = g_i18n:getText("ui_prodmgr_status_inactive")
+			local statusColor  = {1, 0, 0, 1}
+			if recipe.status == ProductionPoint.PROD_STATUS.RUNNING then
+				recipeStatus = g_i18n:getText("ui_prodmgr_status_active")
+				statusColor  = {0, 1, 0, 1}
+			elseif recipe.status == ProductionPoint.PROD_STATUS.MISSING_INPUTS then
+				recipeStatus = g_i18n:getText("ui_prodmgr_status_active") .. "(!)"
+				statusColor  = {1, 0.6, 0, 1}
+			end
+			cell:getAttribute("statusText"):setText(recipeStatus)
+			cell:getAttribute("statusText"):setTextColor(statusColor[1], statusColor[2], statusColor[3], statusColor[4])
+			cell:getAttribute("statusText"):setVisible(true)
+
+			-- Col 1: output icon + recipe name (under Recipe header)
+			if recipe.outputFillTypeInfo and recipe.outputFillTypeInfo.hudOverlayFilename and recipe.outputFillTypeInfo.hudOverlayFilename ~= "" then
+				cell:getAttribute("fillIcon1"):setImageFilename(recipe.outputFillTypeInfo.hudOverlayFilename)
+				cell:getAttribute("fillIcon1"):setVisible(true)
+			else
+				cell:getAttribute("fillIcon1"):setVisible(false)
+			end
+			cell:getAttribute("fillCapacity1"):setText(recipe.name or "")
+			cell:getAttribute("fillCapacity1"):setTextColor(1, 1, 1, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+
+			-- Cols 2-5: one ingredient per column (under Ingredients header)
+			local inputs = recipe.inputs or {}
+			for i = 1, 4 do
+				local colIcon = cell:getAttribute("fillIcon" .. (i + 1))
+				local colText = cell:getAttribute("fillCapacity" .. (i + 1))
+				if i <= #inputs then
+					local input    = inputs[i]
+					local fillType = g_fillTypeManager:getFillTypeByIndex(input.type)
+					if fillType and fillType.hudOverlayFilename and fillType.hudOverlayFilename ~= "" then
+						colIcon:setImageFilename(fillType.hudOverlayFilename)
+						colIcon:setVisible(true)
+					else
+						colIcon:setVisible(false)
+					end
+					local amtText = fillType and (fillType.title .. ": " .. self:formatNumber(math.floor(input.amount)) .. "L") or "?"
+					colText:setText(amtText)
+					colText:setTextColor(0.9, 0.9, 0.9, 1)
+					colText:setVisible(true)
+				else
+					colIcon:setVisible(false)
+					colText:setVisible(false)
+				end
+			end
+
+			-- Hide second-row slots (6-10)
+			for i = 6, 10 do
 				cell:getAttribute("fillIcon" .. i):setVisible(false)
 				cell:getAttribute("fillCapacity" .. i):setVisible(false)
 			end
@@ -1556,7 +1684,7 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 				local fillCapacity = cell:getAttribute("fillCapacity" .. i)
 				local dataIndex = row.startIndex + (i - 1)
 
-				if dataIndex <= #fillTypes and row.rowType == "row2" then
+				if dataIndex <= #fillTypes and row.rowType == "rowN" then
 					local fillType = fillTypes[dataIndex]
 					fillCapacity:setTextColor(1, 1, 1, 1)
 					
