@@ -1,125 +1,121 @@
-<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <l10n>
-    <translationContributions>
-    </translationContributions>
-    <texts>
-        <!-- Main UI Dialog Elements -->
-        <text name="input_SHOW_PRODUCTION_DLG" text="Produktionsmanager" />
-        <text name="ui_productionDlg_title" text="Produktionsmanager" />
-        
-        <!-- Dialog Buttons -->
-        <text name="ui_productionDlg_btnClose" text="Schließen" />
-        <text name="ui_productionDlg_btnShowOutputs" text="Ausgänge anzeigen" />
-        <text name="ui_productionDlg_btnShowInputs" text="Eingänge anzeigen" />
-        <text name="ui_productionDlg_btnShowRecipes" text="Rezepte anzeigen" />
-        <text name="ui_productionDlg_btnShowFillTypes" text="Füllarten anzeigen" />
-        <text name="ui_productionDlg_btnShowFinances" text="Finanzen anzeigen" />
-        <text name="ui_productionDlg_btnHideFinances" text="Finanzen ausblenden" />
-        <text name="ui_productionDlg_btnShowLogistics" text="Logistik anzeigen" />
-        <text name="ui_productionDlg_btnHideLogistics" text="Logistik ausblenden" />
-        <text name="ui_productionDlg_btnChangeOutput" text="Ausgabe ändern" />
-        <text name="ui_productionDlg_btnActivate" text="Aktivieren" />
-        <text name="ui_productionDlg_btnDeactivate" text="Deaktivieren" />
-        <text name="ui_productionDlg_btnExportCSV" text="CSV exportieren" />
-        
-        <!-- Dialog Table Headers -->
-        <text name="ui_productionDlg_hbName" text="Name" />
-        <text name="ui_productionDlg_hbInputs" text="Eingänge" />
-        <text name="ui_productionDlg_hbOutputs" text="Ausgänge" />
-        <text name="ui_productionDlg_hbFillType" text="Füllart" />
-        <text name="ui_productionDlg_hbCapacity" text="Kapazität" />
-        <text name="ui_productionDlg_hbIncome" text="Monatliches Einkommen" />
-        <text name="ui_productionDlg_hbRecipes" text="Rezepte" />
-        <text name="ui_productionDlg_hbRecipe" text="Rezept" />
-        <text name="ui_productionDlg_hbFinances" text="Finanzen" />
-        <text name="ui_productionDlg_hbRevenue" text="Einnahmen" />
-        <text name="ui_productionDlg_hbCosts" text="Kosten" />
-        <text name="ui_productionDlg_hbProfit" text="Nettogewinn" />
-        <text name="ui_productionDlg_hbCyclesPerMonth" text="Zyklen/Mo" />
-        <text name="ui_productionDlg_hbSupplyDuration" text="Vorratsdauer" />
-        <text name="ui_productionDlg_hbOutputMode" text="Ausgabemodus" />
-        <text name="ui_productionDlg_hbLocation" text="Standort" />
-        <text name="ui_productionDlg_hbDestination" text="Ziel" />
-        <text name="ui_productionDlg_hbTotals" text="SUMMEN" />
-        <text name="ui_productionDlg_hbStatus" text="Status" />
-        
-        <!-- Dialog Messages -->
-        <text name="ui_productionDlg_totalIncome" text="Gesamteinkommen/Monat:" />
-        <text name="ui_productionDlg_noProductions" text="Keine Produktionen gefunden" />
-        
-        <!-- Production Status Labels -->
-        <text name="ui_prodmgr_status_active" text="Aktiv" />
-        <text name="ui_prodmgr_status_inactive" text="Inaktiv" />
-        
-        <!-- CSV Export Messages -->
-        <text name="ui_productionDlg_exportSuccess" text="Produktionsdaten erfolgreich exportiert nach: %s" />
-        <text name="ui_productionDlg_exportError" text="CSV-Export fehlgeschlagen. Bitte Dateiberechtigungen prüfen." />
-        <text name="ui_productionDlg_exportErrorFileOpen" text="Export nicht möglich: Die CSV-Datei ist in einem anderen Programm geöffnet. Bitte schließen und erneut versuchen." />
-        
-        <!-- Settings Menu Section Title -->
-        <text name="production_menu_section_title" text="Produktionsmanager" />
-        
-        <!-- Auto-Manage Settings -->
-        <text name="production_menu_automanage" text="Produktionen automatisch verwalten" />
-        <text name="production_menu_automanage_tooltip" text="Produktionen automatisch aktivieren/deaktivieren basierend auf Eingangsverfügbarkeit und Ausgangskapazität" />
-        <text name="production_setting_automanage_on" text="Aktiviert" />
-        <text name="production_setting_automanage_off" text="Deaktiviert" />
+  <texts>
+    <!-- ============================================================ -->
+    <!-- Produktionsmanager - Haupt-Dialog                            -->
+    <!-- ============================================================ -->
+    <text name="ui_productionDlg_title"              text="Produktionsmanager"/>
+    <text name="ui_productionDlg_btnShowOutputs"     text="Ausgaben anzeigen"/>
+    <text name="ui_productionDlg_btnShowInputs"      text="Eingaben anzeigen"/>
+    <text name="ui_productionDlg_btnShowRecipes"     text="Rezepte anzeigen"/>
+    <text name="ui_productionDlg_btnShowFillTypes"   text="Fülltypen anzeigen"/>
+    <text name="ui_productionDlg_btnShowFinances"    text="Finanzen anzeigen"/>
+    <text name="ui_productionDlg_btnHideFinances"    text="Finanzen ausblenden"/>
+    <text name="ui_productionDlg_btnShowLogistics"   text="Logistik anzeigen"/>
+    <text name="ui_productionDlg_btnHideLogistics"   text="Logistik ausblenden"/>
+    <text name="ui_productionDlg_btnChangeOutput"    text="Ausgabe ändern"/>
+    <text name="ui_productionDlg_btnActivate"        text="Aktivieren"/>
+    <text name="ui_productionDlg_btnDeactivate"      text="Deaktivieren"/>
+    <text name="ui_productionDlg_btnSchedule"        text="Zeitplan"/>
+    <text name="ui_productionDlg_btnExportCSV"       text="CSV exportieren"/>
+    <text name="ui_productionDlg_btnClose"           text="Schließen"/>
 
-        <!-- Hide Inactive Settings -->
-        <text name="production_menu_hide_inactive" text="Inaktive Produktionen ausblenden" />
-        <text name="production_menu_hide_inactive_tooltip" text="Produktionsstätten ausblenden, die keine aktiven Rezepte ausführen" />
-        <text name="production_setting_hide_inactive_on" text="Aktiviert" />
-        <text name="production_setting_hide_inactive_off" text="Deaktiviert" />
+    <text name="ui_productionDlg_hbName"             text="Name"/>
+    <text name="ui_productionDlg_hbInputs"           text="Eingaben"/>
+    <text name="ui_productionDlg_hbOutputs"          text="Ausgaben"/>
+    <text name="ui_productionDlg_hbRecipes"          text="Rezepte"/>
+    <text name="ui_productionDlg_hbRevenue"          text="Einnahmen"/>
+    <text name="ui_productionDlg_hbCosts"            text="Kosten"/>
+    <text name="ui_productionDlg_hbProfit"           text="Nettogewinn"/>
+    <text name="ui_productionDlg_hbRecipe"           text="Rezept"/>
+    <text name="ui_productionDlg_hbCyclesPerMonth"   text="Zyklen/Mo"/>
+    <text name="ui_productionDlg_hbSupplyDuration"   text="Vorrat"/>
+    <text name="ui_productionDlg_hbOutputMode"       text="Ausgabe"/>
+    <text name="ui_productionDlg_hbLocation"         text="Ziel"/>
+    <text name="ui_productionDlg_hbStatus"           text="Status"/>
+    <text name="ui_productionDlg_hbIngredients"      text="Zutaten"/>
 
-        <!-- Notification Toggle Settings -->
-        <text name="production_menu_notify_smart_control" text="Bei Smart-Control-Aktionen benachrichtigen" />
-        <text name="production_menu_notify_smart_control_tooltip" text="Benachrichtigungen anzeigen, wenn der Auto-Manager Produktionen startet oder stoppt" />
-        
-        <text name="production_menu_notify_low_inputs" text="Bei niedrigen Eingangspegeln benachrichtigen" />
-        <text name="production_menu_notify_low_inputs_tooltip" text="Warnungen anzeigen, wenn Produktionseingänge zur Neige gehen" />
-        
-        <text name="production_menu_notify_high_outputs" text="Bei hohen Ausgangspegeln benachrichtigen" />
-        <text name="production_menu_notify_high_outputs_tooltip" text="Warnungen anzeigen, wenn Ausgangslager fast voll ist" />
-        
-        <text name="production_setting_notify_on" text="Aktiviert" />
-        <text name="production_setting_notify_off" text="Deaktiviert" />
-        
-        <!-- Threshold Settings -->
-        <text name="production_menu_low_input_threshold" text="Warnschwelle für niedrige Eingänge" />
-        <text name="production_menu_low_input_threshold_tooltip" text="Prozentsatz, bei dem vor niedrigen Eingangspegeln gewarnt wird" />
-        
-        <text name="production_menu_high_output_threshold" text="Warnschwelle für hohe Ausgänge" />
-        <text name="production_menu_high_output_threshold_tooltip" text="Prozentsatz, bei dem vor vollem Ausgangslager gewarnt wird" />
-        
-        <!-- Notification Duration Settings -->
-        <text name="production_menu_notification_duration" text="Anzeigedauer der Benachrichtigung" />
-        <text name="production_menu_notification_duration_tooltip" text="Wie lange Benachrichtigungen auf dem Bildschirm sichtbar bleiben" />
-        
-        <text name="production_setting_duration_3s" text="3 Sekunden" />
-        <text name="production_setting_duration_4s" text="4 Sekunden" />
-        <text name="production_setting_duration_5s" text="5 Sekunden" />
-        <text name="production_setting_duration_6s" text="6 Sekunden" />
-        <text name="production_setting_duration_8s" text="8 Sekunden" />
-        <text name="production_setting_duration_10s" text="10 Sekunden" />
+    <text name="ui_prodmgr_status_active"            text="Aktiv"/>
+    <text name="ui_prodmgr_status_inactive"          text="Inaktiv"/>
 
-        <!-- Smart Control Stop Reasons -->
-        <text name="production_notify_reason_output_full" text="Ausgangslager voll" />
-        <text name="production_notify_reason_out_of_inputs" text="Eingänge aufgebraucht" />
-        <text name="production_notify_reason_low_inputs" text="Eingänge niedrig" />
-        <text name="production_notify_reason_unknown" text="Unbekannter Grund" />
+    <!-- ============================================================ -->
+    <!-- Einstellungen                                                 -->
+    <!-- ============================================================ -->
+    <text name="production_menu_section_title"               text="Produktionsmanager"/>
+    <text name="production_menu_automanage"                  text="Automatische Verwaltung"/>
+    <text name="production_menu_automanage_tooltip"          text="Gestoppte Produktionen automatisch neu starten, wenn Eingaben verfügbar und Ausgaben nicht voll sind."/>
+    <text name="production_menu_hide_inactive"               text="Inaktive ausblenden"/>
+    <text name="production_menu_hide_inactive_tooltip"       text="Produktionsanlagen ohne aktive Rezepte ausblenden."/>
+    <text name="production_menu_notify_smart_control"        text="Benachrichtigung: Steuerung"/>
+    <text name="production_menu_notify_smart_control_tooltip" text="Benachrichtigungen anzeigen, wenn Produktionen automatisch gestartet, gestoppt oder fortgesetzt werden."/>
+    <text name="production_menu_notify_low_inputs"           text="Benachrichtigung: Niedrige Eingaben"/>
+    <text name="production_menu_notify_low_inputs_tooltip"   text="Benachrichtigungen anzeigen, wenn Eingabe-Füllstände niedrig oder leer sind."/>
+    <text name="production_menu_notify_high_outputs"         text="Benachrichtigung: Hohe Ausgaben"/>
+    <text name="production_menu_notify_high_outputs_tooltip" text="Benachrichtigungen anzeigen, wenn Ausgabe-Lager fast voll ist."/>
+    <text name="production_menu_low_input_threshold"         text="Niedrig-Schwellenwert"/>
+    <text name="production_menu_low_input_threshold_tooltip" text="Füllprozentsatz, unterhalb dessen eine Eingabe als niedrig gilt."/>
+    <text name="production_menu_high_output_threshold"       text="Hoch-Schwellenwert"/>
+    <text name="production_menu_high_output_threshold_tooltip" text="Füllprozentsatz, oberhalb dessen eine Ausgabe als voll gilt."/>
+    <text name="production_menu_notification_duration"       text="Anzeigedauer"/>
+    <text name="production_menu_notification_duration_tooltip" text="Wie lange Benachrichtigungen angezeigt werden."/>
 
-        <!-- Smart Control Notification Messages -->
-        <text name="production_notify_started" text="%s gestartet bei %s" />
-        <text name="production_notify_stopped" text="%s gestoppt bei %s - %s" />
-        <text name="production_notify_resumed" text="%s fortgesetzt bei %s" />
-        <text name="production_notify_inputs_restored" text="%s bei %s - Eingänge wurden wiederhergestellt!" />
-        <text name="production_notify_out_of_inputs" text="%s bei %s hat KEINE Eingänge mehr: %s" />
-        <text name="production_notify_low_inputs" text="%s bei %s hat wenig Eingänge: %s" />
-        <text name="production_notify_high_outputs" text="%s bei %s hat fast volle Ausgänge: %s" />
-        
-        <!-- Location Fallback Labels -->
-        <text name="production_notify_unknown_location" text="Unbekannter Standort" />
-        <text name="production_notify_production_facility" text="Produktionsstätte" />
+    <text name="production_setting_automanage_on"      text="Aktiviert"/>
+    <text name="production_setting_automanage_off"     text="Deaktiviert"/>
+    <text name="production_setting_hide_inactive_on"   text="Ausgeblendet"/>
+    <text name="production_setting_hide_inactive_off"  text="Angezeigt"/>
+    <text name="production_setting_notify_on"          text="Aktiviert"/>
+    <text name="production_setting_notify_off"         text="Deaktiviert"/>
+    <text name="production_setting_duration_3s"        text="3 Sekunden"/>
+    <text name="production_setting_duration_4s"        text="4 Sekunden"/>
+    <text name="production_setting_duration_5s"        text="5 Sekunden"/>
+    <text name="production_setting_duration_6s"        text="6 Sekunden"/>
+    <text name="production_setting_duration_8s"        text="8 Sekunden"/>
+    <text name="production_setting_duration_10s"       text="10 Sekunden"/>
 
-    </texts>
+    <!-- ============================================================ -->
+    <!-- Benachrichtigungen                                           -->
+    <!-- ============================================================ -->
+    <text name="production_notify_started"           text="%s in %s wurde gestartet."/>
+    <text name="production_notify_resumed"           text="%s in %s wurde fortgesetzt."/>
+    <text name="production_notify_stopped"           text="%s in %s wurde gestoppt. Grund: %s"/>
+    <text name="production_notify_out_of_inputs"     text="%s in %s: Eingaben aufgebraucht: %s"/>
+    <text name="production_notify_inputs_restored"   text="%s in %s: Eingaben wurden aufgefüllt."/>
+    <text name="production_notify_low_inputs"        text="%s in %s: Eingaben werden knapp: %s"/>
+    <text name="production_notify_high_outputs"      text="%s in %s: Ausgaben fast voll: %s"/>
+
+    <text name="production_notify_reason_output_full"    text="Ausgabe-Lager voll"/>
+    <text name="production_notify_reason_out_of_inputs"  text="Keine Eingaben mehr"/>
+    <text name="production_notify_reason_low_inputs"     text="Eingaben werden knapp"/>
+    <text name="production_notify_reason_unknown"        text="Unbekannt"/>
+    <text name="production_notify_reason_scheduled"      text="Außerhalb geplanter Monate"/>
+
+    <text name="production_notify_unknown_location"      text="Unbekannter Standort"/>
+    <text name="production_notify_production_facility"   text="Produktionsanlage"/>
+
+    <!-- ============================================================ -->
+    <!-- Produktionszeitplan-Dialog                                   -->
+    <!-- ============================================================ -->
+    <text name="PS_DIALOG_TITLE"       text="Produktionszeitplan: %s"/>
+    <text name="PS_COL_MONTH"          text="Monat"/>
+    <text name="PS_COL_STATE"          text="Status"/>
+    <text name="PS_STATE_ACTIVE"       text="Aktiv"/>
+    <text name="PS_STATE_INACTIVE"     text="Inaktiv"/>
+    <text name="PS_BTN_ALL_TOGGLE"     text="Alle Monate umschalten"/>
+    <text name="PS_BTN_ALL_TOGGLE_ON"  text="Alle Monate AN"/>
+    <text name="PS_BTN_ALL_TOGGLE_OFF" text="Alle Monate AUS"/>
+    <text name="PS_BTN_SCHED_TOGGLE"   text="Zeitplan aktivieren/deaktivieren"/>
+
+    <text name="PS_MONTH_1"   text="März"/>
+    <text name="PS_MONTH_2"   text="April"/>
+    <text name="PS_MONTH_3"   text="Mai"/>
+    <text name="PS_MONTH_4"   text="Juni"/>
+    <text name="PS_MONTH_5"   text="Juli"/>
+    <text name="PS_MONTH_6"   text="August"/>
+    <text name="PS_MONTH_7"   text="September"/>
+    <text name="PS_MONTH_8"   text="Oktober"/>
+    <text name="PS_MONTH_9"   text="November"/>
+    <text name="PS_MONTH_10"  text="Dezember"/>
+    <text name="PS_MONTH_11"  text="Januar"/>
+    <text name="PS_MONTH_12"  text="Februar"/>
+  </texts>
 </l10n>

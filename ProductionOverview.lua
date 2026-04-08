@@ -4,10 +4,11 @@ ProductionOverview.dir = g_currentModDirectory
 ProductionOverview.modName = g_currentModName
 ProductionOverview.dlg = nil
 
+-- Core UI
 source(ProductionOverview.dir .. "gui/ProductionDlgFrame.lua")
 
 function ProductionOverview:loadMap(name)
-	print("Production Manager - ModHub V1.0.0.0 - Development V1.0.0.2")
+	print("Production Manager - ModHub V1.0.0.0 - Development V1.0.0.4")
 end
 
 function ProductionOverview:ShowProductionDlg(actionName, keyStatus, arg3, arg4, arg5)

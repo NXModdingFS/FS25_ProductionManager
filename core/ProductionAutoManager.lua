@@ -91,14 +91,12 @@ function ProductionAutoManager:manageProduction(productionPoint)
             
             -- DETECT STATE TRANSITIONS
             
-            -- Transition: RUNNING → MISSING_INPUTS (game auto-paused due to lack of inputs)
+            -- Transition: RUNNING → STOPPED (game auto-paused due to lack of inputs or schedule)
             if wasRunning and not isCurrentlyRunning then
-                -- Production just stopped running
                 if ProductionNotifications then
                     ProductionNotifications.notifyProductionStopped(productionPoint, production, reason)
                 end
                 
-                -- Send out of inputs or low inputs notification
                 if emptyInputs and #emptyInputs > 0 and ProductionNotifications then
                     ProductionNotifications.notifyOutOfInputs(productionPoint, production, emptyInputs)
                     previousState.notifiedLowInputs = true
@@ -107,7 +105,6 @@ function ProductionAutoManager:manageProduction(productionPoint)
                     previousState.notifiedLowInputs = true
                 end
                 
-                -- Send high outputs notification
                 if fullOutputs and #fullOutputs > 0 and ProductionNotifications then
                     ProductionNotifications.notifyHighOutputs(productionPoint, production, fullOutputs)
                     previousState.notifiedHighOutputs = true
@@ -115,7 +112,7 @@ function ProductionAutoManager:manageProduction(productionPoint)
                 
                 previousState.wasRunning = false
                 
-            -- Transition: MISSING_INPUTS → RUNNING (our auto-manager is restarting it)
+            -- Transition: STOPPED → RUNNING (auto-manager is restarting it)
             elseif not wasRunning and shouldActivate then
                 productionPoint:setProductionState(production.id, ProductionPoint.PROD_STATUS.RUNNING)
                 
@@ -131,10 +128,8 @@ function ProductionAutoManager:manageProduction(productionPoint)
                 previousState.notifiedLowInputs = false
                 previousState.notifiedHighOutputs = false
                 
-            -- State: INPUTS_RESTORED (inputs refilled but production still stopped)
+            -- State: inputs refilled but production still stopped
             elseif not wasRunning and not isCurrentlyRunning and shouldActivate and previousState.notifiedLowInputs then
-                -- Inputs have been restored but production hasn't auto-restarted
-                -- (either auto-manage is off or production was manually stopped)
                 if ProductionNotifications then
                     ProductionNotifications.notifyInputsRestored(productionPoint, production)
                 end
@@ -142,11 +137,8 @@ function ProductionAutoManager:manageProduction(productionPoint)
                 previousState.notifiedLowInputs = false
                 previousState.notifiedHighOutputs = false
                 
-            -- State: MISSING_INPUTS → MISSING_INPUTS (still stopped, waiting for inputs)
+            -- State: still stopped, waiting for inputs or schedule window
             elseif not wasRunning and not shouldActivate and not isCurrentlyRunning then
-                -- Production remains stopped
-                
-                -- Send periodic reminders (subject to cooldown)
                 if emptyInputs and #emptyInputs > 0 and ProductionNotifications then
                     if not previousState.notifiedLowInputs then
                         ProductionNotifications.notifyOutOfInputs(productionPoint, production, emptyInputs)
@@ -159,7 +151,6 @@ function ProductionAutoManager:manageProduction(productionPoint)
                     end
                 end
                 
-                -- Send periodic high outputs reminder (subject to cooldown)
                 if fullOutputs and #fullOutputs > 0 and ProductionNotifications then
                     if not previousState.notifiedHighOutputs then
                         ProductionNotifications.notifyHighOutputs(productionPoint, production, fullOutputs)
@@ -167,9 +158,8 @@ function ProductionAutoManager:manageProduction(productionPoint)
                     end
                 end
                 
-            -- State: RUNNING → RUNNING (production is healthy and running)
+            -- State: running normally
             elseif isCurrentlyRunning and shouldActivate then
-                -- Everything is fine, production running normally
                 previousState.wasRunning = true
                 previousState.notifiedLowInputs = false
                 previousState.notifiedHighOutputs = false
@@ -179,6 +169,30 @@ function ProductionAutoManager:manageProduction(productionPoint)
 end
 
 function ProductionAutoManager:shouldActivateProduction(productionPoint, production)
+    -- ----------------------------------------------------------------
+    -- Schedule guard: if this production has an active schedule and the
+    -- current period is outside its allowed months, never auto-restart it.
+    -- This prevents AutoManager from fighting ProductionScheduleManager.
+    -- ----------------------------------------------------------------
+    if ProductionScheduleManager ~= nil then
+        local pointKey = ProductionScheduleManager:getPointKey(productionPoint)
+        local entry    = ProductionScheduleManager:getEntry(pointKey, production.id)
+        if entry ~= nil and entry.scheduleEnabled then
+            local period = ProductionScheduleManager:getCurrentPeriod()
+            if period ~= nil then
+                local months = entry.months or {}
+                local any = false
+                for _ in pairs(months) do any = true; break end
+                if any and months[period] ~= true then
+                    -- Outside scheduled months - do not activate
+                    return false,
+                        g_i18n:getText("production_notify_reason_scheduled"),
+                        {}, {}, {}
+                end
+            end
+        end
+    end
+
     local storage = productionPoint.storage
     local reason = nil
     local emptyInputs = {}  -- Inputs completely out (fillLevel < input.amount)

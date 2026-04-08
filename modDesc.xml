@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="105">
     <author>NX Modding</author>
-    <version>1.0.0.2</version>
+    <version>1.0.0.1</version>
     <title>
         <en>Productions Manager</en>
         <de>Produktionsmanager</de>
@@ -14,6 +14,8 @@ Features:
 • Production Overview: View all productions with fill levels, capacities, and monthly income
 • Toggle Views: Switch between inputs, outputs, and recipes
 • Financial Tracking: See monthly revenue, costs, and net profit for each production
+• Logistics Page: Overview of all production's and their recipies includes, Supply Duration, Cycles/MO, Output Mode, Location, Status
+• Production Scheduling: Set active months per recipe — productions outside their scheduled months are automatically paused and resumed.
 • Auto-Management: Automatically activate/deactivate productions based on input availability and output capacity
 • Smart Notifications: Get alerts when productions stop/start or when inputs are low/outputs are high
 • CSV Export: Export all production data for external analysis
@@ -31,6 +33,7 @@ Funktionen:
 • Ansichten umschalten: Zwischen Eingängen, Ausgängen und Rezepten wechseln
 • Logistikverfolgung: Ausgabezyklen, Standort, Status, Rezeptname und Verteilungsziel anzeigen
 • Finanzverfolgung: Monatliche Einnahmen, Kosten und Nettogewinn jeder Produktion anzeigen
+• Produktionsplanung: Aktive Monate pro Rezept festlegen — außerhalb des Zeitplans werden Produktionen automatisch pausiert.
 • Automatische Verwaltung: Produktionen basierend auf Eingangsverfügbarkeit und Ausgangskapazität automatisch aktivieren/deaktivieren
 • Intelligente Benachrichtigungen: Warnungen erhalten, wenn Produktionen stoppen/starten oder wenn Eingaben niedrig/Ausgaben hoch sind
 • CSV-Export: Alle Produktionsdaten für externe Analyse exportieren
@@ -48,6 +51,7 @@ Fonctionnalités:
 • Basculer les vues: Basculez entre entrées, sorties et recettes
 • Suivi logistique: Consultez les cycles de sortie, emplacement, statut, nom de la recette et destination de distribution
 • Suivi financier: Consultez les revenus mensuels, coûts et bénéfice net de chaque production
+• Planification des productions: Définissez les mois actifs par recette — les productions hors planning sont automatiquement suspendues
 • Gestion automatique: Active/désactive automatiquement les productions en fonction de la disponibilité des entrées et de la capacité de sortie
 • Notifications intelligentes: Recevez des alertes lorsque les productions s'arrêtent/démarrent ou lorsque les entrées sont faibles/sorties élevées
 • Export CSV: Exportez toutes les données de production pour analyse externe
@@ -68,6 +72,7 @@ Logo: MarkThor
         <sourceFile filename="core/ProductionNotifications.lua" />
         <sourceFile filename="core/ProductionSettings.lua" />
         <sourceFile filename="core/ProductionAutoManager.lua" />
+        <sourceFile filename="core/ProductionScheduleManager.lua" />
     </extraSourceFiles>
     <actions>
         <action name="SHOW_PRODUCTION_DLG" category="SYSTEM" />
@@ -77,5 +82,4 @@ Logo: MarkThor
             <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_p" />
         </actionBinding>
     </inputBinding> 
-
 </modDesc>
