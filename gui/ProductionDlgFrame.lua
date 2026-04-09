@@ -1678,56 +1678,9 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			end
 		end
 		
-		if not self.showFinances and not self.showLogistics then
-			for i = 6, 10 do
-				local fillIcon = cell:getAttribute("fillIcon" .. i)
-				local fillCapacity = cell:getAttribute("fillCapacity" .. i)
-				local dataIndex = row.startIndex + (i - 1)
-
-				if dataIndex <= #fillTypes and row.rowType == "rowN" then
-					local fillType = fillTypes[dataIndex]
-					fillCapacity:setTextColor(1, 1, 1, 1)
-					
-					if self.showRecipes then
-						local iconFilename = fillType.outputFillTypeInfo and fillType.outputFillTypeInfo.hudOverlayFilename or nil
-						
-						if iconFilename and iconFilename ~= "" then
-							fillIcon:setImageFilename(iconFilename)
-							fillIcon:setVisible(true)
-						else
-							fillIcon:setVisible(false)
-						end
-						
-						
-						local statusColor = {1, 0, 0, 1} 
-						if fillType.status == ProductionPoint.PROD_STATUS.RUNNING then
-							statusColor = {0, 1, 0, 1} 
-						elseif fillType.status == ProductionPoint.PROD_STATUS.MISSING_INPUTS then
-							statusColor = {1, 0.6, 0, 1} 
-						end
-						
-						fillCapacity:setText(fillType.name)
-						fillCapacity:setTextColor(statusColor[1], statusColor[2], statusColor[3], statusColor[4])
-						fillCapacity:setVisible(true)
-					else
-						if fillType.hudOverlayFilename ~= nil and fillType.hudOverlayFilename ~= "" then
-							fillIcon:setImageFilename(fillType.hudOverlayFilename)
-							fillIcon:setVisible(true)
-						else
-							fillIcon:setVisible(false)
-						end
-
-						local capacityText = string.format("%s / %s L", 
-							self:formatNumber(math.floor(fillType.liters)),
-							self:formatNumber(math.floor(fillType.capacity)))
-						fillCapacity:setText(capacityText)
-						fillCapacity:setVisible(true)
-					end
-				else
-					fillIcon:setVisible(false)
-					fillCapacity:setVisible(false)
-				end
-			end
+		for i = 6, 10 do
+			cell:getAttribute("fillIcon" .. i):setVisible(false)
+			cell:getAttribute("fillCapacity" .. i):setVisible(false)
 		end
 	end
 end
