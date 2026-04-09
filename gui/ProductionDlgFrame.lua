@@ -823,7 +823,7 @@ function ProductionDlgFrame:buildDisplayRows()
 			else
 				local index = 1
 				while index <= #fillTypes do
-					local endIndex = math.min(index + 9, #fillTypes)
+					local endIndex = math.min(index + 4, #fillTypes)
 
 					table.insert(self.displayRows, {
 						production = prod,
