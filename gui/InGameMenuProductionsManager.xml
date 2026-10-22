@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI name="ingameMenuProductionsManager">
+    <GuiElement profile="fs25_menuContainer">
+
+        <!-- Header -->
+        <GuiElement profile="fs25_menuHeaderPanel">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="ingameMenuProductionsManagerHeaderIcon"/>
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" text="$l10n_ui_productionDlg_title"/>
+            <RoundCorner profile="fs25_shopMoneyBoxBg" id="shopMoneyBoxBg"/>
+            <BoxLayout profile="fs25_shopMoneyBox" id="shopMoneyBox">
+                <Text profile="fs25_shopBalance" text="$l10n_ui_balance:"/>
+                <Text profile="fs25_shopMoney" id="currentBalanceText"/>
+            </BoxLayout>
+        </GuiElement>
+
+        <!-- Sub-tab navigation -->
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="subCategoryBox">
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="inputsTab" text="$l10n_ui_tab_inputs">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="outputsTab" text="$l10n_ui_tab_outputs">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="recipesTab" text="$l10n_ui_tab_recipes">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="financesTab" text="$l10n_ui_tab_finances">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="logisticsTab" text="$l10n_ui_tab_logistics">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="stockTab" text="$l10n_pi_tab_stock">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="profitTab" text="$l10n_pi_tab_profit">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="animalsTab" text="$l10n_pi_tab_animals">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="networkTab" text="$l10n_pi_tab_network">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="tasksTab" text="$l10n_pi_tab_tasks">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+        </BoxLayout>
+
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px -57px" />
+        <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="subCategoryPaging" position="0px -10px" onClick="updateSubCategoryPages" />
+
+        <!-- ================= PAGE: INPUTS ================= -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="inputsPage" name="layout">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"   size="250px 32px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbInputs"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbStored"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="inputsTable">
+                <ListItem profile="ingameMenuProductionsManagerListItem" onClick="onClickTableRow">
+                    <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 40px" name="productionName" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
+                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
+                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
+                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
+                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="80px 40px" name="statusText" textSize="12px"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="inputsTable" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- ================= PAGE: OUTPUTS ================= -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="outputsPage" name="layout">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"   size="250px 32px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbProduct"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbStored"/>
+                <Text profile="ProductionDlgHeaderLeft" position="698px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbInPallets"/>
+                <Text profile="ProductionDlgHeaderLeft" position="898px 0px" size="200px 32px" text="$l10n_ui_productionDlg_hbEstPerMonth"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="outputsTable">
+                <ListItem profile="ingameMenuProductionsManagerListItem" onClick="onClickTableRow">
+                    <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 40px" name="productionName" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
+                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
+                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
+                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
+                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="80px 40px" name="statusText" textSize="12px"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="outputsTable" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- ================= PAGE: RECIPES ================= -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="recipesPage" name="layout">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"    size="250px 32px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px"  size="200px 32px" text="$l10n_ui_productionDlg_hbRecipe"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px"  size="700px 32px" text="$l10n_ui_productionDlg_hbIngredients"/>
+                <Text profile="ProductionDlgHeaderLeft" position="1175px 0px" size="80px 32px"  text="$l10n_ui_productionDlg_hbStatus"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="recipesTable">
+                <ListItem profile="ingameMenuProductionsManagerListItem" onClick="onClickTableRow">
+                    <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 40px" name="productionName" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
+                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
+                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
+                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
+                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="80px 40px" name="statusText" textSize="12px"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="recipesTable" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- ================= PAGE: FINANCES ================= -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="financesPage" name="layout">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"    size="250px 32px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px"  size="200px 32px" text="$l10n_ui_productionDlg_hbRevenue"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px"  size="200px 32px" text="$l10n_ui_productionDlg_hbCosts"/>
+                <Text profile="ProductionDlgHeaderLeft" position="698px 0px"  size="200px 32px" text="$l10n_ui_productionDlg_hbProfit"/>
+                <Text profile="ProductionDlgHeaderLeft" position="898px 0px"  size="160px 32px" text="$l10n_ui_productionDlg_hbDistributed"/>
+                <Text profile="ProductionDlgHeaderLeft" position="1038px 0px" size="210px 32px" text="$l10n_ui_productionDlg_hbBestPrice"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="financesTable">
+                <ListItem profile="ingameMenuProductionsManagerListItem" onClick="onClickTableRow">
+                    <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 40px" name="productionName" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
+                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
+                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
+                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
+                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="80px 40px" name="statusText" textSize="12px"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="financesTable" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- ================= PAGE: LOGISTICS (also hosts the schedule view) ================= -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="logisticsPage" name="layout">
+            <!-- Logistics column header (default) -->
+            <GuiElement profile="fs25_statisticsHeaderBox" id="logisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"    size="250px 32px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px"  size="150px 32px" text="$l10n_ui_productionDlg_hbRecipe"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px"  size="150px 32px" text="$l10n_ui_productionDlg_hbCyclesPerMonth"/>
+                <Text profile="ProductionDlgHeaderLeft" position="698px 0px"  size="150px 32px" text="$l10n_ui_productionDlg_hbSupplyDuration"/>
+                <Text profile="ProductionDlgHeaderLeft" position="898px 0px"  size="110px 32px" text="$l10n_ui_productionDlg_hbOutputMode"/>
+                <Text profile="ProductionDlgHeaderLeft" position="1038px 0px" size="165px 32px" text="$l10n_ui_productionDlg_hbLocation"/>
+                <Text profile="ProductionDlgHeaderLeft" position="1175px 0px" size="80px 32px"  text="$l10n_ui_productionDlg_hbStatus"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <!-- Schedule column header (shown only in schedule edit mode) -->
+            <GuiElement profile="fs25_statisticsHeaderBox" id="scheduleHeaderBox" visible="false">
+                <Text profile="ProductionDlgHeaderLeft" position="5px 0px"   size="250px 32px" text="$l10n_PS_COL_MONTH"/>
+                <Text profile="ProductionDlgHeaderLeft" position="298px 0px" size="200px 32px" text="$l10n_PS_COL_STATE"/>
+                <Text profile="ProductionDlgHeaderLeft" position="498px 0px" size="400px 32px" text="$l10n_PS_COL_PEAK"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp"/>
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="logisticsTable">
+                <ListItem profile="ingameMenuProductionsManagerListItem" onClick="onClickTableRow">
+                    <Text profile="ProductionDlgRowCellLeft" position="5px 0px" size="260px 40px" name="productionName" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="fillIcon1" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="177px 35px" name="fillCapacity1" textSize="12px"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="fillIcon2" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="177px 35px" name="fillCapacity2" textSize="12px"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="fillIcon3" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="177px 35px" name="fillCapacity3" textSize="12px"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="fillIcon4" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
+                    <Bitmap position="475px 43px" size="18px 18px" name="fillIcon7" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="498px 35px" size="177px 35px" name="fillCapacity7" textSize="12px"/>
+                    <Bitmap position="675px 43px" size="18px 18px" name="fillIcon8" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="698px 35px" size="177px 35px" name="fillCapacity8" textSize="12px"/>
+                    <Bitmap position="875px 43px" size="18px 18px" name="fillIcon9" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="898px 35px" size="110px 35px" name="fillCapacity9" textSize="12px"/>
+                    <Bitmap position="1015px 43px" size="18px 18px" name="fillIcon10" imageColor="1 1 1 1" /><Text profile="ProductionDlgRowCellLeft" position="1038px 35px" size="165px 35px" name="fillCapacity10" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="80px 40px" name="statusText" textSize="12px"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="logisticsTable" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+        <!-- ================= PAGES: STOCK / PROFITABILITY / ANIMALS / NETWORK / THIS MONTH =================
+             One shared container driven by ProductionInsightsView: it rewrites the header
+             captions and rows for whichever of the five sub-tabs is active. -->
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="insightsPage" name="layout">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader0" position="5px 0px"    size="265px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader1" position="298px 0px"  size="190px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader2" position="498px 0px"  size="190px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader3" position="698px 0px"  size="190px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader4" position="898px 0px"  size="135px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader5" position="1038px 0px" size="135px 32px"/>
+                <Text profile="ProductionDlgHeaderLeft" id="piHeader6" position="1175px 0px" size="85px 32px"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <SmoothList profile="ingameMenuProductionsManagerList" id="piList">
+                <ListItem profile="ingameMenuProductionsManagerListItem">
+                    <Bitmap position="5px 11px" size="18px 18px" name="nameIcon" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="28px 0px" size="240px 40px" name="nameText" textLayoutMode="scrolling"/>
+                    <Bitmap position="275px 11px" size="18px 18px" name="icon1" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="190px 40px" name="text1" textSize="13px" textLayoutMode="scrolling"/>
+                    <Bitmap position="475px 11px" size="18px 18px" name="icon2" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="498px 0px" size="190px 40px" name="text2" textSize="13px" textLayoutMode="scrolling"/>
+                    <Bitmap position="675px 11px" size="18px 18px" name="icon3" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="698px 0px" size="190px 40px" name="text3" textSize="13px" textLayoutMode="scrolling"/>
+                    <Bitmap position="875px 11px" size="18px 18px" name="icon4" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="135px 40px" name="text4" textSize="13px" textLayoutMode="scrolling"/>
+                    <Bitmap position="1015px 11px" size="18px 18px" name="icon5" imageColor="1 1 1 1" />
+                    <Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="135px 40px" name="text5" textSize="13px" textLayoutMode="scrolling"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1175px 0px" size="85px 40px" name="statusText" textSize="12px" textLayoutMode="scrolling"/>
+                    <!-- Free-text cell spanning the data columns (tasks, notes, detail lines) -->
+                    <Text profile="ProductionDlgRowCellLeft" position="298px 0px" size="955px 40px" name="wideText" textSize="13px" textLayoutMode="scrolling"/>
+                </ListItem>
+            </SmoothList>
+            <ThreePartBitmap profile="ingameMenuProductionsManagerListSliderBox">
+                <Slider profile="fs25_listSlider" dataElementId="piList" />
+            </ThreePartBitmap>
+        </GuiElement>
+
+    </GuiElement>
+</GUI>

@@ -27,6 +27,20 @@
     <text name="ui_productionDlg_hbRevenue"          text="Revenus"/>
     <text name="ui_productionDlg_hbCosts"            text="Coûts"/>
     <text name="ui_productionDlg_hbProfit"           text="Bénéfice net"/>
+    <text name="ui_productionDlg_hbDistributed"      text="Distribué"/>
+    <text name="ui_productionDlg_hbBestPrice"        text="Meilleure vente (/1000L)"/>
+    <text name="ui_productionDlg_hbProduct"          text="Produit"/>
+    <text name="ui_productionDlg_hbStored"           text="Stocké"/>
+    <text name="ui_productionDlg_hbInPallets"        text="En palettes"/>
+    <text name="ui_productionDlg_hbEstPerMonth"      text="Est. /mois"/>
+    <text name="ui_productionDlg_outNone"            text="Aucune sortie"/>
+    <!-- In-game menu tab -->
+    <text name="ui_refresh"                          text="Actualiser"/>
+    <text name="ui_tab_inputs"                       text="Entrées"/>
+    <text name="ui_tab_outputs"                      text="Sorties"/>
+    <text name="ui_tab_recipes"                      text="Recettes"/>
+    <text name="ui_tab_finances"                     text="Finances"/>
+    <text name="ui_tab_logistics"                    text="Logistique"/>
     <text name="ui_productionDlg_hbRecipe"           text="Recette"/>
     <text name="ui_productionDlg_hbCyclesPerMonth"   text="Cycles/Mo"/>
     <text name="ui_productionDlg_hbSupplyDuration"   text="Approvisionnement"/>
@@ -98,6 +112,8 @@
     <text name="PS_DIALOG_TITLE"       text="Planification: %s"/>
     <text name="PS_COL_MONTH"          text="Mois"/>
     <text name="PS_COL_STATE"          text="État"/>
+    <text name="PS_COL_PEAK"           text="Prix saisonnier"/>
+    <text name="PS_PEAK_MARK"          text="MAX"/>
     <text name="PS_STATE_ACTIVE"       text="Actif"/>
     <text name="PS_STATE_INACTIVE"     text="Inactif"/>
     <text name="PS_BTN_ALL_TOGGLE"     text="Basculer tous les mois"/>
@@ -117,5 +133,248 @@
     <text name="PS_MONTH_10"  text="Décembre"/>
     <text name="PS_MONTH_11"  text="Janvier"/>
     <text name="PS_MONTH_12"  text="Février"/>
+
+    <!-- ============================================================ -->
+    <!-- Productions Insights / Logistics (1.0.0.3)                   -->
+    <!-- ============================================================ -->
+
+    <!-- Productions Insights -->
+    <text name="pi_tab_stock" text="Stock"/>
+    <text name="pi_tab_profit" text="Rentabilité"/>
+    <text name="pi_tab_animals" text="Animaux"/>
+    <text name="pi_tab_network" text="Réseau"/>
+    <text name="pi_tab_tasks" text="Ce mois-ci"/>
+
+    <!-- Column headers -->
+    <text name="pi_hdr_product" text="Produit"/>
+    <text name="pi_hdr_stock" text="Stock"/>
+    <text name="pi_hdr_priceNow" text="Actuel /1000 L"/>
+    <text name="pi_hdr_valueNow" text="Valeur actuelle"/>
+    <text name="pi_hdr_bestMonth" text="Meilleur mois"/>
+    <text name="pi_hdr_bestValue" text="Meilleure valeur"/>
+    <text name="pi_hdr_alert" text="Alerte"/>
+    <text name="pi_hdr_facility" text="Installation"/>
+    <text name="pi_hdr_recipe" text="Recette"/>
+    <text name="pi_hdr_cost1000" text="Coût /1000 L"/>
+    <text name="pi_hdr_value1000" text="Valeur /1000 L"/>
+    <text name="pi_hdr_profit1000" text="Bénéfice /1000 L"/>
+    <text name="pi_hdr_profitMonth" text="Bénéfice /mois"/>
+    <text name="pi_hdr_source" text="Source"/>
+    <text name="pi_hdr_pen" text="Enclos / groupe"/>
+    <text name="pi_hdr_animals" text="Animaux"/>
+    <text name="pi_hdr_age" text="Âge"/>
+    <text name="pi_hdr_condition" text="Santé / réserves"/>
+    <text name="pi_hdr_value" text="Valeur"/>
+    <text name="pi_hdr_advice" text="Conseil"/>
+    <text name="pi_hdr_repro" text="Repro."/>
+    <text name="pi_hdr_building" text="Bâtiment / produit"/>
+    <text name="pi_hdr_role" text="Rôle"/>
+    <text name="pi_hdr_level" text="Niveau"/>
+    <text name="pi_hdr_rule" text="Règle"/>
+    <text name="pi_hdr_thisMonth" text="Ce mois-ci"/>
+    <text name="pi_hdr_income" text="Net"/>
+    <text name="pi_hdr_category" text="Catégorie"/>
+    <text name="pi_hdr_task" text="Tâche"/>
+    <text name="pi_hdr_detail" text="Détails"/>
+    <text name="pi_hdr_amount" text="Quantité"/>
+    <text name="pi_hdr_count" text="Nombre"/>
+    <text name="pi_hdr_price1000" text="Prix /1000 L"/>
+    <text name="pi_hdr_stockValue" text="Valeur du stock"/>
+    <text name="pi_hdr_bestMonthPrice" text="Meilleur mois /1000 L"/>
+    <text name="pi_hdr_viaRecipe" text="Via recette /1000 L"/>
+    <text name="pi_hdr_uplift" text="Gain /1000 L"/>
+    <text name="pi_hdr_perCycle" text="Par cycle"/>
+    <text name="pi_hdr_perMonth" text="Par mois"/>
+    <text name="pi_hdr_capacity" text="Capacité"/>
+    <text name="pi_hdr_fill" text="Remplissage"/>
+    <text name="pi_hdr_bestAge" text="Meilleur âge de vente"/>
+    <text name="pi_hdr_lifetime" text="Bénéfice depuis l'achat"/>
+    <text name="pi_hdr_cheapest" text="Aliment le moins cher"/>
+    <text name="pi_hdr_weight" text="Poids"/>
+
+    <!-- Buttons -->
+    <text name="pi_btn_details" text="Détails"/>
+    <text name="pi_btn_closeDetails" text="Fermer les détails"/>
+    <text name="pi_btn_filter" text="Filtre"/>
+    <text name="pi_btn_sort" text="Trier"/>
+    <text name="pi_btn_alert" text="Alerte au meilleur mois"/>
+    <text name="pi_btn_clearAlert" text="Supprimer l'alerte"/>
+    <text name="pi_btn_mode" text="Règle de sortie"/>
+    <text name="pi_btn_reserve" text="Réserve"/>
+    <text name="pi_btn_block" text="Bloquer"/>
+    <text name="pi_btn_unblock" text="Débloquer"/>
+    <text name="pi_btn_priority" text="Priorité"/>
+    <text name="pi_btn_target" text="Objectif"/>
+    <text name="pi_btn_accept" text="Accepter les livraisons"/>
+    <!-- Filters and labels -->
+    <text name="pi_filter_all" text="Tout"/>
+    <text name="pi_filter_inStock" text="En stock"/>
+    <text name="pi_filter_allSellable" text="Tout ce qui se vend"/>
+    <text name="pi_sort_monthly" text="Par mois"/>
+    <text name="pi_sort_per1000" text="Par 1000 L"/>
+    <text name="pi_recipeSource_owned" text="Possédée"/>
+    <text name="pi_recipeSource_forSale" text="À vendre"/>
+    <text name="pi_recipeSource_shop" text="Boutique"/>
+    <text name="pi_nodeKind_production" text="Production"/>
+    <text name="pi_nodeKind_animals" text="Enclos"/>
+    <text name="pi_nodeKind_silo" text="Silo / stockage"/>
+    <text name="pi_source_silo" text="Silos et hangars"/>
+    <text name="pi_source_production" text="Productions"/>
+    <text name="pi_source_animals" text="Enclos"/>
+    <text name="pi_source_pallet" text="Palettes"/>
+    <text name="pi_source_bale" text="Balles"/>
+    <text name="pi_source_objectStorage" text="Stockage d'objets"/>
+    <text name="pi_source_vehicle" text="Véhicules et remorques"/>
+    <text name="pi_total" text="Total"/>
+    <text name="pi_now" text="Maintenant"/>
+    <text name="pi_peakNow" text="Meilleur mois !"/>
+    <text name="pi_alert_on" text="Alerte active"/>
+    <text name="pi_alert_peak" text="Alerte : prévenir au meilleur mois"/>
+    <text name="pi_allYear" text="Toute l'année"/>
+    <text name="pi_auto" text="Automatique"/>
+    <text name="pi_missing" text="Manquant"/>
+    <text name="pi_months" text="%d mois"/>
+    <text name="pi_health" text="Santé %d%%"/>
+    <text name="pi_sold" text="vendu %s"/>
+    <text name="pi_role_in" text="Entrée"/>
+    <text name="pi_role_out" text="Sortie"/>
+    <text name="pi_rule_blocked" text="Bloqué"/>
+    <text name="pi_rule_input" text="%s, remplir à %d%%"/>
+    <text name="pi_rule_reserve" text="(garder %d%%)"/>
+    <text name="pi_silo_open" text="Accepte"/>
+    <text name="pi_silo_closed" text="Fermé"/>
+    <text name="pi_short_food" text="N"/>
+    <text name="pi_short_water" text="E"/>
+    <text name="pi_short_straw" text="P"/>
+    <text name="pi_supply_food" text="Nourriture"/>
+    <text name="pi_supply_water" text="Eau"/>
+    <text name="pi_supply_straw" text="Paille"/>
+
+    <!-- Detail views -->
+    <text name="pi_detail_where" text="Où il se trouve"/>
+    <text name="pi_detail_sellPoints" text="Points de vente"/>
+    <text name="pi_detail_byMonth" text="Meilleur prix par mois"/>
+    <text name="pi_detail_bestUse" text="Vaut plus transformé"/>
+    <text name="pi_detail_inputs" text="Entrées"/>
+    <text name="pi_detail_outputs" text="Sorties"/>
+    <text name="pi_detail_economics" text="Économie"/>
+    <text name="pi_detail_supplies" text="Réserves"/>
+    <text name="pi_detail_groups" text="Groupes"/>
+    <text name="pi_detail_feed" text="Groupes d'aliments"/>
+    <text name="pi_eco_cycles" text="Cycles par mois"/>
+    <text name="pi_eco_running" text="Coûts de fonctionnement par mois"/>
+    <text name="pi_eco_profitCycle" text="Bénéfice par cycle"/>
+    <text name="pi_eco_profitMonth" text="Bénéfice par mois (actif tout le mois)"/>
+    <text name="pi_eco_outputMonth" text="Produit principal par mois"/>
+    <text name="pi_eco_price" text="Prix d'achat"/>
+    <text name="pi_eco_payback" text="Rentabilisé en"/>
+    <text name="pi_eco_feedMonth" text="Coût d'alimentation par mois"/>
+    <text name="pi_eco_outputValue" text="Valeur produite par mois"/>
+    <text name="pi_eco_net" text="Net par mois"/>
+    <text name="pi_pen_summary" text="%s - %d / %d animaux, %d libres - valeur %s"/>
+
+    <!-- Notes -->
+    <text name="pi_note_empty" text="Rien à afficher pour l'instant."/>
+    <text name="pi_note_error" text="Cette vue n'a pas pu être construite - voir log.txt."/>
+    <text name="pi_note_noStock" text="Aucun stock de ce produit."/>
+    <text name="pi_note_noSellPoint" text="Aucun point de vente n'achète ce produit."/>
+    <text name="pi_note_sellDirect" text="Aucune recette ne bat la vente directe selon votre seuil."/>
+    <text name="pi_note_noAlert" text="Aucune alerte de prix pour ce produit."/>
+    <text name="pi_note_profit" text="Les entrées en stock qui se vendent sont valorisées au prix de vente, celles à acheter au prix boutique. Les sorties selon votre base de prix. Le bénéfice mensuel suppose que la recette tourne tout le mois. * = prix d'entrée en partie estimés."/>
+    <text name="pi_note_shared" text="Cette installation partage sa capacité : %d recettes actives reçoivent chacune une part égale, les chiffres mensuels sont divisés en conséquence."/>
+    <text name="pi_note_estimated" text="Certains prix sont estimés car aucun point de vente n'achète ce produit."/>
+    <text name="pi_note_unpricedDetail" text="Aucun point de vente n'achète le produit principal, cette recette n'est pas classée."/>
+    <text name="pi_note_unpriced" text="%d recettes masquées : aucun point de vente n'achète leur produit principal, leur bénéfice ne peut être évalué."/>
+    <text name="pi_note_feedSerial" text="Dans cet enclos les groupes sont des alternatives : le moins cher est retenu."/>
+    <text name="pi_note_feedParallel" text="Dans cet enclos les groupes se combinent : coût selon le mélange pondéré."/>
+    <text name="pi_note_animals" text="Valeurs issues des données animales de la carte ; le meilleur âge compare valeur et alimentation."/>
+    <text name="pi_note_networkOff" text="La logistique est désactivée. Préparez les règles ici puis activez-la dans les réglages."/>
+    <text name="pi_note_networkClient" text="Les chiffres d'activité sont suivis par l'hôte."/>
+
+    <!-- Field states and jobs -->
+    <!-- Animal advice -->
+    <text name="pi_advice_keep" text="Continuer la production"/>
+    <text name="pi_advice_sell" text="Vendre maintenant"/>
+    <text name="pi_advice_grow" text="Garder jusqu'à %d mois"/>
+    <text name="pi_advice_health" text="Rétablir la santé d'abord"/>
+    <text name="pi_advice_pastPeak" text="Passé son pic - vendre"/>
+    <text name="pi_advice_evaluate" text="Évaluer la vente"/>
+    <text name="pi_advice_ride" text="Monter et panser chaque jour"/>
+
+    <!-- This Month -->
+    <text name="pi_hud_nothing" text="Rien d'urgent"/>
+    <text name="pi_taskCat_sell" text="Vendre"/>
+    <text name="pi_taskCat_collect" text="Ramasser"/>
+    <text name="pi_taskCat_vehicle" text="Véhicules"/>
+    <text name="pi_taskCat_animals" text="Animaux"/>
+    <text name="pi_taskCat_production" text="Productions"/>
+    <text name="pi_task_alert" text="Vendre %s : %s /1000 L à %s"/>
+    <text name="pi_task_peak" text="Meilleur mois pour vendre %s (%s en stock)"/>
+    <text name="pi_task_bales" text="Ramasser %d balles de %s aux champs"/>
+    <text name="pi_task_vehicle" text="Décharger %s : %s %s"/>
+    <text name="pi_task_supply" text="%s : %s à %s"/>
+    <text name="pi_task_health" text="%s : animaux en mauvaise santé"/>
+    <text name="pi_task_lowInput" text="%s : %s bas (%s)"/>
+    <text name="pi_task_fullOutput" text="%s : %s presque plein (%s)"/>
+    <!-- Notifications -->
+    <text name="pi_notify_alert" text="Alerte prix : %s se vend %s /1000 L à %s"/>
+    <!-- Logistics rules -->
+    <text name="pl_mode_0" text="Par défaut du jeu"/>
+    <text name="pl_mode_1" text="Garder"/>
+    <text name="pl_mode_2" text="Approvisionner"/>
+    <text name="pl_mode_3" text="Stocker en silo"/>
+    <text name="pl_mode_4" text="Vendre maintenant"/>
+    <text name="pl_mode_5" text="Vendre au meilleur mois"/>
+    <text name="pl_mode_6" text="Approvisionner, vendre le surplus"/>
+    <text name="pl_priority_1" text="Basse"/>
+    <text name="pl_priority_2" text="Normale"/>
+    <text name="pl_priority_3" text="Haute"/>
+
+    <!-- Settings -->
+    <text name="pi_menu_section_insights" text="Analyses de production"/>
+    <text name="pi_menu_section_logistics" text="Logistique de production"/>
+    <text name="pi_menu_section_gameplay" text="Productions : jeu"/>
+    <text name="pi_setting_off" text="Désactivé"/>
+    <text name="pi_setting_farmWide" text="Toute la ferme"/>
+    <text name="pi_setting_priceCurrent" text="Prix actuel"/>
+    <text name="pi_setting_pricePeak" text="Prix du meilleur mois"/>
+    <text name="pi_setting_insightsAnimalThreshold" text="Alerte réserves animaux"/>
+    <text name="pi_setting_insightsAnimalThreshold_tooltip" text="Prévient quand nourriture, eau ou paille tombe à ce niveau. 0 % seulement si vide."/>
+    <text name="pi_setting_insightsVehicleFullSize" text="Taille remorque pleine"/>
+    <text name="pi_setting_insightsVehicleFullSize_tooltip" text="Signaler seulement les remorques pleines d'au moins cette capacité."/>
+    <text name="pi_setting_insightsFreeWater" text="Eau gratuite"/>
+    <text name="pi_setting_insightsFreeWater_tooltip" text="Considérer l'eau comme gratuite dans les calculs (par ex. prise dans un lac)."/>
+    <text name="pi_setting_insightsPriceBasis" text="Base de prix des sorties"/>
+    <text name="pi_setting_insightsPriceBasis_tooltip" text="Valoriser au meilleur prix du jour, ou à celui du meilleur mois (si vous stockez)."/>
+    <text name="pi_setting_insightsAdviceThreshold" text="Seuil de conseil de transformation"/>
+    <text name="pi_setting_insightsAdviceThreshold_tooltip" text="Ne proposer une recette que si elle rapporte au moins autant de plus par 1000 L que la vente directe."/>
+    <text name="pi_setting_logisticsEnabled" text="Réseau logistique"/>
+    <text name="pi_setting_logisticsEnabled_tooltip" text="Déplace chaque heure les produits entre productions, enclos et silos selon les règles de l'onglet Réseau."/>
+    <text name="pi_setting_logisticsScope" text="Portée d'approvisionnement"/>
+    <text name="pi_setting_logisticsScope_tooltip" text="Toute la ferme, ou seulement les sources à cette distance."/>
+    <text name="pi_setting_logisticsIncludeAnimals" text="Inclure les enclos"/>
+    <text name="pi_setting_logisticsIncludeAnimals_tooltip" text="Approvisionner les enclos et permettre de livrer ou vendre leurs produits."/>
+    <text name="pi_setting_logisticsIncludeSilos" text="Inclure silos et hangars"/>
+    <text name="pi_setting_logisticsIncludeSilos_tooltip" text="Les silos et hangars peuvent approvisionner et recevoir des produits."/>
+    <text name="pi_setting_logisticsDefaultTarget" text="Objectif par défaut"/>
+    <text name="pi_setting_logisticsDefaultTarget_tooltip" text="Niveau de remplissage des entrées sans objectif propre."/>
+    <text name="pi_setting_logisticsTransportRate" text="Coût de transport"/>
+    <text name="pi_setting_logisticsTransportRate_tooltip" text="Facturé par 1000 L et par km déplacés par le réseau."/>
+    <text name="pi_setting_logisticsAutoWater" text="Eau automatique"/>
+    <text name="pi_setting_logisticsAutoWater_tooltip" text="Remplir l'eau des productions et enclos au prix ci-dessous."/>
+    <text name="pi_setting_logisticsWaterPrice" text="Prix de l'eau /1000 L"/>
+    <text name="pi_setting_logisticsWaterPrice_tooltip" text="Coût de l'eau automatique."/>
+    <text name="pi_setting_gpWaterNoValue" text="Eau sans valeur de vente"/>
+    <text name="pi_setting_gpWaterNoValue_tooltip" text="Les points de vente ne paient pas l'eau."/>
+    <text name="pi_setting_gpGrapeYield" text="Rendement raisin"/>
+    <text name="pi_setting_gpGrapeYield_tooltip" text="Multiplie le rendement du raisin."/>
+    <text name="pi_setting_gpOliveYield" text="Rendement olive"/>
+    <text name="pi_setting_gpOliveYield_tooltip" text="Multiplie le rendement des olives."/>
+    <text name="pi_setting_gpHorseValue" text="Valeur des chevaux"/>
+    <text name="pi_setting_gpHorseValue_tooltip" text="Multiplie la valeur de vente des chevaux."/>
+    <text name="pi_setting_gpPigValue" text="Valeur des porcs"/>
+    <text name="pi_setting_gpPigValue_tooltip" text="Multiplie la valeur de vente des porcs."/>
+    <text name="pi_setting_gpBeefValue" text="Valeur des bovins à viande"/>
+    <text name="pi_setting_gpBeefValue_tooltip" text="Multiplie la valeur des bovins sans lait. Les vaches laitières ne changent pas."/>
   </texts>
 </l10n>

@@ -200,13 +200,19 @@ function ProductionScheduleManager:applyAll(period)
         if pp ~= nil and prodTable ~= nil then
             for storedProdId, rawEntry in pairs(prodTable) do
                 local entry = normalizeEntry(rawEntry)
-                if entry.scheduleEnabled then
+                -- Stored ids can go stale (placeable demolished, recipe removed),
+                -- so verify before calling in - otherwise the base game logs
+                -- "unknown productionId" once per period, forever.
+                local liveProduction = nil
+                if type(pp.productionsIdToObj) == "table" then
+                    liveProduction = pp.productionsIdToObj[storedProdId]
+                end
+
+                if entry.scheduleEnabled and liveProduction ~= nil then
                     local enable = isAllowedInPeriod(entry.months, period)
                     pp:setProductionState(storedProdId, enable, true)
                     -- Sync isEnabled field directly as a safety net
-                    if type(pp.productionsIdToObj) == "table" and pp.productionsIdToObj[storedProdId] ~= nil then
-                        pp.productionsIdToObj[storedProdId].isEnabled = enable
-                    end
+                    liveProduction.isEnabled = enable
                     if pp.updateActiveProductions ~= nil then
                         pp:updateActiveProductions()
                     elseif pp.updateProductions ~= nil then

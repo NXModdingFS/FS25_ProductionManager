@@ -40,6 +40,8 @@
         <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50" />
     </Profile> 
 
+    <!-- Row text: centred in the row (TenantFarmer style). Icons are positioned at
+         the row's vertical centre in the XML so both land on the same line. -->
     <Profile name="ProductionDlgRowCellLeft" extends="baseReference" with="anchorStretchingYLeft">
         <textBold value="false" />
         <textSize value="15px" />

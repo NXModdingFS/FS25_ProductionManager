@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUIProfiles>
+
+    <!-- Header icon: borrow a base-game in-game-menu glyph. The menuIcon.dds is the
+         TAB-strip icon (via addPageTab); this is the panel header symbol. -->
+    <Profile name="ingameMenuProductionsManagerHeaderIcon" extends="baseReference" with="anchorMiddleCenter">
+        <size value="50px 50px" />
+        <imageSliceId value="gui.icon_ingameMenu_prices" />
+        <imageColor value="$preset_fs25_colorMainDark" />
+    </Profile>
+
+    <!-- List area + slider: mirror TenantFarmer's exact values so header and rows
+         line up and the list fills the full page width. -->
+    <Profile name="ingameMenuProductionsManagerList" extends="emptyPanel" with="anchorStretchingYLeft pivotTopLeft">
+        <position value="0px -40px" />
+        <absoluteSizeOffset value="0px 80px" />
+    </Profile>
+
+    <Profile name="ingameMenuProductionsManagerListSliderBox" extends="fs25_listSliderBox" with="anchorTopStretchingX pivotTopRight">
+        <position value="28px -40px" />
+        <absoluteSizeOffset value="0px 80px" />
+    </Profile>
+
+    <!-- Row: full-width stretch, alternating background. Single-line height so the
+         content sits vertically centred, like TenantFarmer. Every page now renders one
+         item per row (no more two-line input grid). -->
+    <Profile name="ingameMenuProductionsManagerListItem" extends="baseReference" with="anchorTopStretchingX alternating">
+        <height value="40px"/>
+        <imageColor value="$preset_fs25_colorGrey" />
+        <imageSelectedColor value="$preset_fs25_colorMainHighlight" />
+        <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50" />
+    </Profile>
+
+</GUIProfiles>
