@@ -2,7 +2,7 @@
 > Edits of this mod file are not permitted.
 > You may submit a bug report via the Github Repo, however, the prefered method is through our discord this allows us to easily ask questions sould I need more evidence https://discord.gg/aDTTXAhE2m
 
-<ins>**NX Productions**</ins> (ModHub v1.0.0.0 · Latest v1.0.0.3)
+<ins>**NX Productions**</ins> (ModHub v1.0.0.0 · Latest v1.0.0.2)
 
 A production management mod for Farming Simulator 25: an overview of every production facility with automatic management, plus stock, profitability, animal and logistics tools in one place.
 
@@ -40,7 +40,7 @@ Open the in-game menu (ESC) and select the **Productions Manager** tab. Use the 
 
 - CSV Export: Export all production data for external analysis
 
-**Insights (v1.0.0.3)**
+**Insights (v1.0.0.2)**
 
 - Stock: everything your farm owns in silos, productions, animal pens, vehicles, pallets, bales and object storage, valued at today's best price and at its best month. Open Details for where it is stored, every sell point, a month-by-month price table and which recipes earn more than selling it raw
 
@@ -54,7 +54,7 @@ Open the in-game menu (ESC) and select the **Productions Manager** tab. Use the 
 
 - This Month: a list of what needs doing now - price alerts, best-month sales, bales left on fields, full trailers, low animal food/water/straw, low production inputs and nearly full outputs
 
-**Productions Logistics (v1.0.0.3, optional - off by default)**
+**Productions Logistics (v1.0.0.2, optional - off by default)**
 
 - A demand-driven supply network between your productions, animal pens and silos, run every in-game hour
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="105">
     <author>NX Modding</author>
-    <version>1.0.0.3</version>
+    <version>1.0.0.2</version>
     <title>
         <en>Productions Manager</en>
         <de>Produktionsmanager</de>
@@ -25,7 +25,7 @@ Features:
 
 Open the in-game menu (ESC) and select the Productions Manager tab.
 
-NEW in 1.0.0.3 - five new tabs in the Productions Manager screen:
+NEW in 1.0.0.2 - five new tabs in the Productions Manager screen:
 • Stock: everything your farm owns in silos, productions, animal pens, vehicles, pallets, bales and object storage, valued at the best sell point now and at its best month. Drill down for storage locations, every sell point, a month-by-month price table and processing advice (which recipe earns more than selling raw).
 • Price alerts: get notified when a product reaches its best month to sell.
 • Profitability: every recipe from your productions, productions for sale on the map and production buildings in the shop, compared by cost, value and profit per 1000 L and per month, including payback time.
@@ -40,14 +40,12 @@ NEW - Productions Logistics (optional, off by default):
 NEW - Optional gameplay settings (off by default, host-controlled in multiplayer): water with no sale value, grape and olive yield multipliers, horse / pig / beef cattle value multipliers.
 
 Version History:
-• 1.0.0.3 (Latest)
+• 1.0.0.2 (Latest)
   - Added Productions Insights, Productions Logistics and the optional gameplay settings described above
   - Settings are now defined in one place; only host-wide settings are synced, display preferences stay personal, and joining players receive the host's settings
   - Finance Fix: running costs now use the game's monthly production cost instead of hourly cost x 24 x days per month, which overstated costs on saves with more than one day per month
-
-• 1.0.0.2
   - Bug Fixes: manual Activate/Deactivate now uses the correct production id (fixes "setProductionState(): unknown productionId" error) and no longer flickers the recipe status
-  - Finance Fixes: monthly revenue now reflects output actually produced per month (not current stock value), costs use days-per-period instead of the game-speed multiplier, idle facilities no longer accrue active-hour costs
+  - Finance Fixes: monthly revenue now reflects output actually produced per month (not current stock value), idle facilities no longer accrue active-hour costs
   - Finance: revenue now uses the best real sell price from selling stations (showing which station pays most per output); auto-delivered output is shown in a separate "Distributed" column rather than counted as income; both added to CSV export
   - Schedule: the month list now marks each output's seasonal peak-price month(s), so you can schedule around them
   - UI Fix: page headers could get out of sync with the table when switching pages quickly; the header now always matches the page being shown
@@ -79,7 +77,7 @@ Funktionen:
 
 Öffnen Sie das Spielmenü (ESC) und wählen Sie den Tab Produktionsmanager.
 
-NEU in 1.0.0.3 - fünf neue Tabs im Produktionsmanager:
+NEU in 1.0.0.2 - fünf neue Tabs im Produktionsmanager:
 • Bestand: alles, was Ihr Hof besitzt (Silos, Produktionen, Ställe, Fahrzeuge, Paletten, Ballen, Objektlager), bewertet zum besten aktuellen Preis und im besten Monat; Details mit Lagerorten, Verkaufsstellen, Monatspreisen und Verarbeitungsempfehlung.
 • Preisalarme: benachrichtigt werden, wenn ein Produkt seinen besten Verkaufsmonat erreicht.
 • Rentabilität: alle Rezepte eigener, zum Verkauf stehender und im Shop erhältlicher Produktionen im Vergleich (Kosten, Wert, Gewinn pro 1000 L und pro Monat, Amortisation).
@@ -91,13 +89,11 @@ NEU - Produktions-Logistik (optional, standardmäßig aus): bedarfsgesteuertes V
 NEU - Optionale Spieleinstellungen (standardmäßig aus): Wasser ohne Verkaufswert, Ertragsfaktor Trauben/Oliven, Wertfaktoren für Pferde, Schweine und Mastrinder.
 
 Versionsverlauf:
-• 1.0.0.3 (Neueste Version)
+• 1.0.0.2 (Neueste Version)
   - Produktions-Einblicke, Produktions-Logistik und optionale Spieleinstellungen hinzugefügt
   - Finanzkorrektur: Betriebskosten nutzen jetzt die monatlichen Produktionskosten des Spiels statt Stundenkosten x 24 x Tage pro Monat, was die Kosten bei mehr als einem Tag pro Monat zu hoch auswies
-
-• 1.0.0.2
   - Fehlerbehebungen: Manuelles Aktivieren/Deaktivieren verwendet jetzt die korrekte Produktions-ID (behebt den Fehler "setProductionState(): unknown productionId") und der Rezeptstatus flackert nicht mehr
-  - Finanzkorrekturen: Monatliche Einnahmen spiegeln jetzt die tatsächlich pro Monat produzierte Ausgabe wider (nicht den aktuellen Lagerwert), Kosten verwenden Tage pro Periode statt des Spielgeschwindigkeits-Multiplikators, inaktive Anlagen verursachen keine Aktivstundenkosten mehr
+  - Finanzkorrekturen: Monatliche Einnahmen spiegeln jetzt die tatsächlich pro Monat produzierte Ausgabe wider (nicht den aktuellen Lagerwert), inaktive Anlagen verursachen keine Aktivstundenkosten mehr
   - Finanzen: Einnahmen verwenden jetzt den besten tatsächlichen Verkaufspreis der Verkaufsstationen (und zeigen, welche Station pro Ausgabe am meisten zahlt); automatisch gelieferte Ausgaben werden in einer separaten Spalte "Verteilt" angezeigt, statt als Einkommen gezählt zu werden; beide zum CSV-Export hinzugefügt
   - Zeitplan: Die Monatsliste markiert jetzt die saisonalen Höchstpreismonate jeder Ausgabe, damit Sie entsprechend planen können
   - UI-Fix: Die Spaltenüberschriften konnten beim schnellen Wechseln der Seiten von der Tabelle abweichen; die Überschrift passt jetzt immer zur angezeigten Seite
@@ -130,7 +126,7 @@ Fonctionnalités:
 
 Ouvrez le menu de jeu (ESC) et sélectionnez l'onglet Gestionnaire de Production.
 
-NOUVEAU en 1.0.0.3 - cinq nouveaux onglets dans le Gestionnaire de Production :
+NOUVEAU en 1.0.0.2 - cinq nouveaux onglets dans le Gestionnaire de Production :
 • Stock : tout ce que possède votre ferme (silos, productions, enclos, véhicules, palettes, balles, stockage d'objets), valorisé au meilleur prix actuel et au meilleur mois ; détail des emplacements, points de vente, prix mois par mois et conseils de transformation.
 • Alertes de prix : notification quand un produit atteint son meilleur mois de vente.
 • Rentabilité : toutes les recettes des productions possédées, à vendre et de la boutique, comparées (coût, valeur, bénéfice par 1000 L et par mois, amortissement).
@@ -142,13 +138,11 @@ NOUVEAU - Logistique de production (optionnelle, désactivée par défaut) : ré
 NOUVEAU - Réglages de jeu optionnels (désactivés par défaut) : eau sans valeur de vente, multiplicateur de rendement raisin/olive, multiplicateurs de valeur chevaux, porcs et bovins à viande.
 
 Historique des versions:
-• 1.0.0.3 (Dernière version)
+• 1.0.0.2 (Dernière version)
   - Ajout des Analyses de production, de la Logistique de production et des réglages de jeu optionnels
   - Correction financière : les coûts de fonctionnement utilisent désormais le coût mensuel de production du jeu au lieu du coût horaire x 24 x jours par mois, qui surestimait les coûts avec plus d'un jour par mois
-
-• 1.0.0.2
   - Corrections : l'activation/désactivation manuelle utilise désormais le bon identifiant de production (corrige l'erreur "setProductionState(): unknown productionId") et le statut de la recette ne clignote plus
-  - Corrections financières : les revenus mensuels reflètent désormais la production réellement fabriquée par mois (et non la valeur du stock actuel), les coûts utilisent les jours par période au lieu du multiplicateur de vitesse de jeu, les installations inactives n'accumulent plus de coûts horaires actifs
+  - Corrections financières : les revenus mensuels reflètent désormais la production réellement fabriquée par mois (et non la valeur du stock actuel), les installations inactives n'accumulent plus de coûts horaires actifs
   - Finances : les revenus utilisent désormais le meilleur prix de vente réel des points de vente (en indiquant quelle station paie le plus par sortie) ; les sorties livrées automatiquement sont affichées dans une colonne séparée « Distribué » au lieu d'être comptées comme revenu ; les deux ajoutées à l'export CSV
   - Planification : la liste des mois marque désormais le(s) mois de prix saisonnier maximal de chaque sortie, pour planifier en conséquence
   - Correction UI : les en-têtes de colonnes pouvaient se désynchroniser du tableau lors d'un changement rapide de page ; l'en-tête correspond désormais toujours à la page affichée
