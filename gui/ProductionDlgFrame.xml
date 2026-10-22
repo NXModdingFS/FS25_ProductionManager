@@ -15,12 +15,24 @@
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
+            <!-- Output header (per-product rows: stored, pallets, estimate) -->
+            <Bitmap profile="ProductionDlgList" id="outputHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
+                <Text profile="ProductionDlgHeaderLeft" position="15px 0px"  size="250px 40.77px" text="$l10n_ui_productionDlg_hbName"/>
+                <Text profile="ProductionDlgHeaderLeft" position="275px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbProduct"/>
+                <Text profile="ProductionDlgHeaderLeft" position="475px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbStored"/>
+                <Text profile="ProductionDlgHeaderLeft" position="675px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbInPallets"/>
+                <Text profile="ProductionDlgHeaderLeft" position="875px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbEstPerMonth"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
+            </Bitmap>
+
             <!-- Finance header -->
             <Bitmap profile="ProductionDlgList" id="financeHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
                 <Text profile="ProductionDlgHeaderLeft" position="15px 0px" size="250px 40.77px" text="$l10n_ui_productionDlg_hbName"/>
                 <Text profile="ProductionDlgHeaderLeft" position="275px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbRevenue"/>
                 <Text profile="ProductionDlgHeaderLeft" position="475px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbCosts"/>
                 <Text profile="ProductionDlgHeaderLeft" position="675px 0px" size="200px 40.77px" text="$l10n_ui_productionDlg_hbProfit"/>
+                <Text profile="ProductionDlgHeaderLeft" position="875px 0px" size="160px 40.77px" text="$l10n_ui_productionDlg_hbDistributed"/>
+                <Text profile="ProductionDlgHeaderLeft" position="1035px 0px" size="210px 40.77px" text="$l10n_ui_productionDlg_hbBestPrice"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
@@ -48,7 +60,8 @@
             <!-- Schedule view header -->
             <Bitmap profile="ProductionDlgList" id="scheduleHeaderBox" position="45px -80px" size="1250px 50px" visible="false">
                 <Text profile="ProductionDlgHeaderLeft" position="15px 0px"  size="250px 40.77px" text="$l10n_PS_COL_MONTH"/>
-                <Text profile="ProductionDlgHeaderLeft" position="280px 0px" size="400px 40.77px" text="$l10n_PS_COL_STATE"/>
+                <Text profile="ProductionDlgHeaderLeft" position="280px 0px" size="200px 40.77px" text="$l10n_PS_COL_STATE"/>
+                <Text profile="ProductionDlgHeaderLeft" position="480px 0px" size="400px 40.77px" text="$l10n_PS_COL_PEAK"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px"/>
             </Bitmap>
            
@@ -70,7 +83,7 @@
                     <Text profile="ProductionDlgRowCellLeft" position="898px 0px" size="110px 35px" name="fillCapacity4" textSize="12px"/>
                     
                     <Bitmap position="1015px 8px" size="18px 18px" name="fillIcon5" imageColor="1 1 1 1" />
-                    <Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px"/>
+                    <Text profile="ProductionDlgRowCellLeft" position="1038px 0px" size="165px 35px" name="fillCapacity5" textSize="12px" textLayoutMode="scrolling"/>
 
                     <Bitmap position="275px 43px" size="18px 18px" name="fillIcon6" imageColor="1 1 1 1" />
                     <Text profile="ProductionDlgRowCellLeft" position="298px 35px" size="177px 35px" name="fillCapacity6" textSize="12px"/>
@@ -96,19 +109,28 @@
             </ThreePartBitmap>
         </GuiElement>
 
-        <BoxLayout profile="fs25_dialogButtonBox" size="1250px 60px">
+        <!-- Footer order: persistent navigation first, then contextual actions,
+             then schedule-view actions, with Close always last. Grouping the
+             contextual buttons at the end keeps the navigation buttons in a
+             stable position instead of being shoved around when a contextual
+             button appears. -->
+        <BoxLayout profile="fs25_dialogButtonBox" size="1250px 60px" id="buttonLayout">
+            <!-- Persistent navigation -->
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowOutputs" onClick="onClickToggle" id="toggleButton" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowRecipes" onClick="onClickRecipes" id="recipeButton" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowFinances" onClick="onClickFinances" id="financesButton" />
+            <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowLogistics" onClick="onClickLogistics" id="logisticsButton" />
+            <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnExportCSV" onClick="onClickExportCSV" id="exportButton" />
+            <!-- Contextual actions (logistics page) -->
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnChangeOutput" onClick="onClickChangeOutput" id="changeOutputButton" visible="false" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnActivate" onClick="onClickToggleRecipe" id="toggleRecipeButton" visible="false" />
             <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnSchedule" onClick="onClickSchedule" id="scheduleButton" visible="false" />
+            <!-- Schedule-view actions -->
             <Button profile="buttonOK" text="$l10n_PS_BTN_ALL_TOGGLE" onClick="onClickAllMonths" id="allMonthsButton" visible="false" />
             <Button profile="buttonOK" text="$l10n_PS_BTN_SCHED_TOGGLE" onClick="onClickSchedEnable" id="schedEnableButton" visible="false" />
             <Button profile="buttonActivate" text="$l10n_button_ok" onClick="onClickCommitSchedule" id="commitScheduleButton" visible="false" />
             <Button profile="buttonBack" text="$l10n_button_cancel" onClick="onClickCancelSchedule" id="cancelScheduleButton" visible="false" />
-            <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnShowLogistics" onClick="onClickLogistics" id="logisticsButton" />
-            <Button profile="buttonOK" text="$l10n_ui_productionDlg_btnExportCSV" onClick="onClickExportCSV" id="exportButton" />
+            <!-- Always last -->
             <Button profile="buttonBack" text="$l10n_ui_productionDlg_btnClose" onClick="onClickBack" />
         </BoxLayout>
     </GuiElement>

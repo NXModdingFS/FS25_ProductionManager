@@ -114,7 +114,8 @@ function ProductionAutoManager:manageProduction(productionPoint)
                 
             -- Transition: STOPPED → RUNNING (auto-manager is restarting it)
             elseif not wasRunning and shouldActivate then
-                productionPoint:setProductionState(production.id, ProductionPoint.PROD_STATUS.RUNNING)
+                -- Second arg is a boolean state, not a PROD_STATUS constant
+                productionPoint:setProductionState(production.id, true)
                 
                 if ProductionNotifications then
                     if previousState.notifiedLowInputs then

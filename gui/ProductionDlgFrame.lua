@@ -31,6 +31,7 @@ function ProductionDlgFrame:onOpen()
 	self:updateToggleButtonText()
 	self:updateRecipeButtonText()
 	self:loadProductionData()
+	self:updateHeaderVisibility()
 
 	if self.toggleButton ~= nil then
 		self.toggleButton:setInputAction(InputAction.MENU_EXTRA_1)
@@ -87,6 +88,8 @@ function ProductionDlgFrame:onOpen()
 	if self.recipeHeaderBox ~= nil then
 		self.recipeHeaderBox:setVisible(false)
 	end
+
+	self:refreshButtonLayout()
 
 	self:setSoundSuppressed(true)
 	FocusManager:setFocus(self.overviewTable)
@@ -215,6 +218,18 @@ function ProductionDlgFrame:onClickSchedule()
 	ProductionScheduleManager.ctxMonths          = months
 	ProductionScheduleManager.ctxScheduleEnabled = (entry.scheduleEnabled == true)
 
+	-- Seasonal price peak for the primary output, so the schedule can highlight
+	-- the best months to sell. Display-only, so it lives on the frame (not the
+	-- persisted schedule context). nil if the market helper or price data is absent.
+	self.schedulePeak = nil
+	if ProductionMarketData ~= nil and production.outputs ~= nil and #production.outputs > 0 then
+		local outputType = production.outputs[1].type
+		local peak = ProductionMarketData:getSeasonalPeak(outputType)
+		if peak ~= nil then
+			self.schedulePeak = peak
+		end
+	end
+
 	self.showSchedule = true
 	self:enterScheduleView()
 end
@@ -251,6 +266,8 @@ function ProductionDlgFrame:enterScheduleView()
 		self.dialogTitleElement:setText(g_i18n:getText("PS_DIALOG_TITLE"):format(tostring(name)))
 	end
 
+	self:refreshButtonLayout()
+
 	self:updateAllMonthsButtonText()
 	self:updateSchedEnableButtonText()
 	self:buildDisplayRows()
@@ -262,6 +279,7 @@ end
 
 function ProductionDlgFrame:exitScheduleView()
 	self.showSchedule = false
+	self.schedulePeak = nil
 
 	-- Restore export button
 	if self.exportButton ~= nil then self.exportButton:setVisible(true) end
@@ -284,7 +302,8 @@ function ProductionDlgFrame:exitScheduleView()
 		self.logisticsButton:setText(g_i18n:getText("ui_productionDlg_btnHideLogistics"))
 		self.logisticsButton:setVisible(true)
 	end
-	if self.logisticsHeaderBox ~= nil then self.logisticsHeaderBox:setVisible(true) end
+	self:updateHeaderVisibility()
+	self:refreshButtonLayout()
 
 	self:loadProductionData()
 	self:buildDisplayRows()
@@ -298,12 +317,15 @@ end
 function ProductionDlgFrame:buildScheduleRows()
 	self.displayRows = {}
 	local months = (ProductionScheduleManager ~= nil and ProductionScheduleManager.ctxMonths) or {}
+	local peak = self.schedulePeak
 	for i = 1, 12 do
 		table.insert(self.displayRows, {
 			rowType   = "schedule",
 			monthIdx  = i,
 			monthName = g_i18n:getText("PS_MONTH_" .. i),
-			enabled   = (months[i] == true)
+			enabled   = (months[i] == true),
+			isPeak    = (peak ~= nil and peak.periods[i] == true),
+			peakPrice = (peak ~= nil and peak.price) or nil
 		})
 	end
 end
@@ -447,8 +469,34 @@ function ProductionDlgFrame:loadProductionData()
 	self.productions = {}
 
 	if g_currentMission ~= nil and g_currentMission.productionChainManager ~= nil then
+		-- Best current sell price per fill type, scanned once for the whole refresh
+		-- rather than per production. Empty table if the market helper is absent.
+		local farmId = g_currentMission:getFarmId()
+		local sellPrices = {}
+		if ProductionMarketData ~= nil then
+			-- Never let a market-scan problem abort the whole data load
+			local ok, result = pcall(function() return ProductionMarketData:getSellPriceMap(farmId) end)
+			if ok and type(result) == "table" then
+				sellPrices = result
+			else
+				Logging.warning("ProductionDlgFrame: sell-price scan failed, continuing without it (%s)", tostring(result))
+			end
+		end
+
+		-- Farm-wide pallet contents per fill type (output already spawned as pallets
+		-- no longer shows in a production's internal storage). Scanned once, guarded.
+		local palletTotals = {}
+		if ProductionPalletData ~= nil then
+			local ok, result = pcall(function() return ProductionPalletData:getPalletTotals(farmId) end)
+			if ok and type(result) == "table" then
+				palletTotals = result
+			else
+				Logging.warning("ProductionDlgFrame: pallet scan failed, continuing without it (%s)", tostring(result))
+			end
+		end
+
 		for _, productionPoint in pairs(g_currentMission.productionChainManager.productionPoints) do
-			if productionPoint.ownerFarmId == g_currentMission:getFarmId() then
+			if productionPoint.ownerFarmId == farmId then
 
 				local hasActiveProduction = true
 				if ProductionSettings and ProductionSettings.hideInactiveProductions then
@@ -479,6 +527,9 @@ function ProductionDlgFrame:loadProductionData()
 						monthlyIncome = 0,
 						monthlyCosts = 0,
 						monthlyRevenue = 0,
+						monthlyDistributedValue = 0,
+						bestSale = nil,
+						monthlyOutputLiters = {},   -- [fillTypeIndex] = litres produced per month
 						dailyUpkeep = 0,
 						productionPoint = productionPoint
 					}
@@ -510,6 +561,7 @@ function ProductionDlgFrame:loadProductionData()
 								local fillType = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
 								if fillType ~= nil then
 									local data = {
+										fillTypeIndex = fillTypeIndex,
 										name = fillType.name,
 										title = fillType.title,
 										liters = fillLevel,
@@ -707,14 +759,77 @@ function ProductionDlgFrame:loadProductionData()
 						end
 					end
 
-					local daysPerMonth = g_currentMission.missionInfo.timeScale or 1
+					-- Days in an in-game month. NOTE: missionInfo.timeScale is the game-speed
+					-- multiplier, NOT a day count - using it here scaled every cost by the
+					-- player's speed setting.
+					local daysPerMonth = g_currentMission.missionInfo.plannedDaysPerPeriod or 1
 
-					for _, ft in pairs(prodData.outputFillTypes) do
-						local idx = g_fillTypeManager:getFillTypeIndexByName(ft.name)
-						if idx then
-							local price = g_currentMission.economyManager:getPricePerLiter(idx)
-							if price then
-								prodData.monthlyRevenue = prodData.monthlyRevenue + (ft.liters * price)
+					-- Revenue is the value of output PRODUCED per month by running recipes,
+					-- not the value of whatever happens to be sitting in storage. Outputs set
+					-- to auto-deliver feed another facility, so they are intermediate goods
+					-- rather than income and are tracked separately.
+					local hasRunningProduction = false
+
+					if productionPoint.productions ~= nil then
+						for _, production in pairs(productionPoint.productions) do
+							if production.status == ProductionPoint.PROD_STATUS.RUNNING then
+								hasRunningProduction = true
+
+								local cyclesPerMonth = ProductionUtil.monthlyRate(production.cyclesPerMonth,
+									production.cyclesPerHour, production.cyclesPerMinute) or 0
+
+								if production.outputs ~= nil then
+									for _, output in pairs(production.outputs) do
+										-- Litres of this output produced per month (running recipes only),
+										-- used for the estimated pallets/month figure on the output page.
+										local producedPerMonth = (output.amount or 0) * cyclesPerMonth
+										prodData.monthlyOutputLiters[output.type] =
+											(prodData.monthlyOutputLiters[output.type] or 0) + producedPerMonth
+
+										-- Prefer the best real sell price from a station; fall back to
+										-- the economy manager's reference price if no station buys it.
+										local saleInfo = sellPrices[output.type]
+										local price = saleInfo ~= nil and saleInfo.price or nil
+										if price == nil then
+											price = g_currentMission.economyManager:getPricePerLiter(output.type)
+										end
+
+										if price ~= nil then
+											local value = (output.amount or 0) * cyclesPerMonth * price
+
+											local mode = nil
+											if productionPoint.getOutputDistributionMode ~= nil then
+												mode = productionPoint:getOutputDistributionMode(output.type)
+											end
+
+											if mode == ProductionPoint.OUTPUT_MODE.AUTO_DELIVER then
+												prodData.monthlyDistributedValue = prodData.monthlyDistributedValue + value
+											else
+												prodData.monthlyRevenue = prodData.monthlyRevenue + value
+
+												-- Remember the highest-value sold output so the finance page
+												-- can show where it sells best.
+												if saleInfo ~= nil and (prodData.bestSale == nil or value > prodData.bestSale.value) then
+													local ft = g_fillTypeManager:getFillTypeByIndex(output.type)
+													prodData.bestSale = {
+														value        = value,
+														pricePerLiter = saleInfo.price,
+														stationName  = saleInfo.stationName,
+														fillTypeTitle = ft ~= nil and ft.title or "?"
+													}
+												end
+											end
+										end
+									end
+								end
+
+								-- Running costs are a per-production-month figure (24 production
+								-- hours); they are not scaled by the save's days per month.
+								local runningPerMonth = ProductionUtil.monthlyRate(production.costsPerActiveMonth,
+									production.costsPerActiveHour)
+								if runningPerMonth ~= nil then
+									prodData.monthlyCosts = prodData.monthlyCosts + runningPerMonth
+								end
 							end
 						end
 					end
@@ -727,23 +842,33 @@ function ProductionDlgFrame:loadProductionData()
 						end
 					end
 
-					if productionPoint.costsPerActiveHour ~= nil then
-						prodData.monthlyCosts = prodData.monthlyCosts +
-							(productionPoint.costsPerActiveHour * 24 * daysPerMonth)
-					end
-
-					if productionPoint.productions ~= nil then
-						for _, production in pairs(productionPoint.productions) do
-							if production.status == ProductionPoint.PROD_STATUS.RUNNING then
-								if production.costsPerActiveHour ~= nil then
-									prodData.monthlyCosts = prodData.monthlyCosts +
-										(production.costsPerActiveHour * 24 * daysPerMonth)
-								end
-							end
-						end
+					-- Building-level running costs only accrue while something is running
+					local pointRunningPerMonth = ProductionUtil.monthlyRate(productionPoint.costsPerActiveMonth,
+						productionPoint.costsPerActiveHour)
+					if hasRunningProduction and pointRunningPerMonth ~= nil then
+						prodData.monthlyCosts = prodData.monthlyCosts + pointRunningPerMonth
 					end
 
 					prodData.monthlyIncome = prodData.monthlyRevenue - prodData.monthlyCosts
+
+					-- Enrich each output with farm pallet inventory and a monthly estimate.
+					-- monthlyPallets is only set when a pallet capacity is known (a pallet of
+					-- that type exists on the map); otherwise the view falls back to litres.
+					for _, ft in ipairs(prodData.outputFillTypes) do
+						local idx = ft.fillTypeIndex
+						local pal = idx ~= nil and palletTotals[idx] or nil
+						if pal ~= nil then
+							ft.palletLiters   = pal.liters
+							ft.palletCount    = pal.count
+							ft.palletCapacity = pal.palletCapacity
+						end
+						local monthly = (idx ~= nil and prodData.monthlyOutputLiters[idx]) or 0
+						ft.monthlyLiters = monthly
+						if monthly > 0 and ft.palletCapacity ~= nil and ft.palletCapacity > 0 then
+							ft.monthlyPallets = monthly / ft.palletCapacity
+						end
+					end
+
 					table.insert(self.productions, prodData)
 				end
 			end
@@ -820,21 +945,52 @@ function ProductionDlgFrame:buildDisplayRows()
 					production = prod,
 					rowType    = "recipe_gap"
 				})
-			else
-				local index = 1
-				while index <= #fillTypes do
-					local endIndex = math.min(index + 4, #fillTypes)
-
+			elseif not self.showInputs then
+				-- Output page: one row per output product, with room for current
+				-- pallet contents and an estimated pallets/month figure.
+				if #prod.outputFillTypes > 0 then
+					for i, ft in ipairs(prod.outputFillTypes) do
+						table.insert(self.displayRows, {
+							production = prod,
+							rowType    = "output_row",
+							fillType   = ft,
+							isFirst    = (i == 1)
+						})
+					end
+				else
 					table.insert(self.displayRows, {
 						production = prod,
-						rowType = index == 1 and "row1" or "rowN",
-						fillTypes = fillTypes,
-						startIndex = index,
-						endIndex = endIndex
+						rowType    = "output_empty",
+						isFirst    = true
 					})
-
-					index = endIndex + 1
 				end
+				table.insert(self.displayRows, {
+					production = prod,
+					rowType    = "output_gap"
+				})
+			else
+				-- Input page: one row per input product (single line, centred),
+				-- matching the Outputs page instead of the old 2-row grid.
+				if #prod.inputFillTypes > 0 then
+					for i, ft in ipairs(prod.inputFillTypes) do
+						table.insert(self.displayRows, {
+							production = prod,
+							rowType    = "input_row",
+							fillType   = ft,
+							isFirst    = (i == 1)
+						})
+					end
+				else
+					table.insert(self.displayRows, {
+						production = prod,
+						rowType    = "input_empty",
+						isFirst    = true
+					})
+				end
+				table.insert(self.displayRows, {
+					production = prod,
+					rowType    = "input_gap"
+				})
 			end
 		end
 	end
@@ -872,6 +1028,38 @@ function ProductionDlgFrame:updateRecipeButtonText()
 	end
 end
 
+-- Centralized header reconciliation. Exactly one header box is shown, chosen by
+-- the SAME priority buildDisplayRows() uses to pick the body. Handlers used to
+-- toggle header boxes piecemeal, so a quick sequence of page switches could leave
+-- the wrong combination visible (header not matching the body). Deriving both from
+-- one priority order guarantees they always agree.
+function ProductionDlgFrame:updateHeaderVisibility()
+	local schedule  = self.showSchedule == true
+	local logistics = (not schedule) and (self.showLogistics == true)
+	local finances  = (not schedule) and (not logistics) and (self.showFinances == true)
+	local recipes   = (not schedule) and (not logistics) and (not finances) and (self.showRecipes == true)
+	local standard  = (not schedule) and (not logistics) and (not finances) and (not recipes)
+	-- The standard view splits into the input grid vs the per-product output rows
+	local stdInputs  = standard and (self.showInputs == true)
+	local stdOutputs = standard and (self.showInputs ~= true)
+
+	if self.scheduleHeaderBox  ~= nil then self.scheduleHeaderBox:setVisible(schedule)   end
+	if self.logisticsHeaderBox ~= nil then self.logisticsHeaderBox:setVisible(logistics) end
+	if self.financeHeaderBox   ~= nil then self.financeHeaderBox:setVisible(finances)    end
+	if self.recipeHeaderBox    ~= nil then self.recipeHeaderBox:setVisible(recipes)      end
+	if self.tableHeaderBox     ~= nil then self.tableHeaderBox:setVisible(stdInputs)     end
+	if self.outputHeaderBox    ~= nil then self.outputHeaderBox:setVisible(stdOutputs)   end
+end
+
+-- Force the footer button bar to re-flow after any button is shown/hidden.
+-- BoxLayout only lays out visible children, and without an explicit invalidate
+-- it can leave stale positions (buttons overlapping) after a quick page switch.
+function ProductionDlgFrame:refreshButtonLayout()
+	if self.buttonLayout ~= nil and self.buttonLayout.invalidateLayout ~= nil then
+		self.buttonLayout:invalidateLayout()
+	end
+end
+
 -- ============================================================
 -- Button Click Handlers
 -- ============================================================
@@ -893,70 +1081,23 @@ function ProductionDlgFrame:onClickToggleRecipe()
         return
     end
 
-    local productionId = nil
-    for id, prod in pairs(prodPoint.productions) do
-        if prod == production then
-            productionId = id
-            break
-        end
-    end
-    
-    if productionId == nil then
-        Logging.warning("Could not find production ID")
+    -- productionsIdToObj is keyed by the production's XML string id, NOT by its
+    -- index in prodPoint.productions. Passing the array index makes the base
+    -- game reject the call with "unknown productionId".
+    local productionId = production.id
+
+    if productionId == nil or prodPoint.productionsIdToObj == nil
+       or prodPoint.productionsIdToObj[productionId] == nil then
+        Logging.warning("ProductionDlgFrame: cannot resolve production id for '%s'", tostring(production.name))
         return
     end
 
     local isActive = production.status == ProductionPoint.PROD_STATUS.RUNNING or production.status == ProductionPoint.PROD_STATUS.MISSING_INPUTS
 
-    
-    if g_server ~= nil then
-        if ProductionPointProductionStateEvent then
-            g_server:broadcastEvent(ProductionPointProductionStateEvent.new(prodPoint, productionId, not isActive))
-        elseif ProductionPointProductionStatusEvent then
-            g_server:broadcastEvent(ProductionPointProductionStatusEvent.new(prodPoint, productionId, not isActive and ProductionPoint.PROD_STATUS.RUNNING or ProductionPoint.PROD_STATUS.INACTIVE))
-        end
-    else
-        if ProductionPointProductionStateEvent then
-            g_client:getServerConnection():sendEvent(ProductionPointProductionStateEvent.new(prodPoint, productionId, not isActive))
-        elseif ProductionPointProductionStatusEvent then
-            g_client:getServerConnection():sendEvent(ProductionPointProductionStatusEvent.new(prodPoint, productionId, not isActive and ProductionPoint.PROD_STATUS.RUNNING or ProductionPoint.PROD_STATUS.INACTIVE))
-        end
-    end
+    -- setProductionState updates isEnabled, rebuilds activeProductions and
+    -- broadcasts the status event itself - don't duplicate any of that here.
+    prodPoint:setProductionState(productionId, not isActive)
 
-    if isActive then
-       
-        if prodPoint.setProductionState then
-            prodPoint:setProductionState(productionId, false)
-        end
-
-        production.status = ProductionPoint.PROD_STATUS.INACTIVE
-
-        if prodPoint.activeProductions then
-            for i = #prodPoint.activeProductions, 1, -1 do
-                if prodPoint.activeProductions[i] == production then
-                    table.remove(prodPoint.activeProductions, i)
-                end
-            end
-        end
-    else
-        
-        if prodPoint.setProductionState then
-            prodPoint:setProductionState(productionId, true)
-        end
-        
-       
-        production.status = ProductionPoint.PROD_STATUS.RUNNING
-        
-        if prodPoint.activeProductions and not table.hasElement(prodPoint.activeProductions, production) then
-            table.insert(prodPoint.activeProductions, production)
-        end
-    end
-
-
-    if prodPoint.updateProduction then
-        prodPoint:updateProduction(0)
-    end
-    
     local idx = self.overviewTable:getSelectedIndexInSection()
     
     self:setSoundSuppressed(true)
@@ -1071,19 +1212,8 @@ function ProductionDlgFrame:onClickLogistics()
 		self.scheduleButton:setVisible(false)
 	end
 	
-	if self.tableHeaderBox ~= nil then
-		self.tableHeaderBox:setVisible(not self.showLogistics)
-	end
-	if self.financeHeaderBox ~= nil then
-		self.financeHeaderBox:setVisible(false)
-	end
-	if self.recipeHeaderBox ~= nil then
-		self.recipeHeaderBox:setVisible(false)
-	end
-	if self.logisticsHeaderBox ~= nil then
-		self.logisticsHeaderBox:setVisible(self.showLogistics)
-	end
-	
+	self:updateHeaderVisibility()
+	self:refreshButtonLayout()
 
 	self:loadProductionData()
 	self:buildDisplayRows()
@@ -1110,14 +1240,9 @@ function ProductionDlgFrame:onClickFinances()
 	if self.toggleRecipeButton ~= nil then
 		self.toggleRecipeButton:setVisible(false)
 	end
-	
-	if self.tableHeaderBox ~= nil then
-		self.tableHeaderBox:setVisible(not self.showFinances)
-	end
-	if self.financeHeaderBox ~= nil then
-		self.financeHeaderBox:setVisible(self.showFinances)
-	end
-	
+
+	self:updateHeaderVisibility()
+	self:refreshButtonLayout()
 
 	self:loadProductionData()
 	self:buildDisplayRows()
@@ -1136,14 +1261,9 @@ function ProductionDlgFrame:onClickRecipes()
 		self.toggleRecipeButton:setVisible(false)
 	end
 
-	-- Swap headers: recipes page uses its own header box
-	if self.tableHeaderBox ~= nil then
-		self.tableHeaderBox:setVisible(not self.showRecipes)
-	end
-	if self.recipeHeaderBox ~= nil then
-		self.recipeHeaderBox:setVisible(self.showRecipes)
-	end
-	
+	self:updateHeaderVisibility()
+	self:refreshButtonLayout()
+
 	self:loadProductionData()
 	self:buildDisplayRows()
 	self.overviewTable:reloadData()
@@ -1152,6 +1272,7 @@ end
 function ProductionDlgFrame:onClickToggle()
 	self.showInputs = not self.showInputs
 	self:updateToggleButtonText()
+	self:updateHeaderVisibility()
 	self:buildDisplayRows()
 	self.overviewTable:reloadData()
 end
@@ -1190,8 +1311,8 @@ function ProductionDlgFrame:onClickExportCSV()
 
 	local currencySymbol = g_i18n:getCurrencySymbol(true)
 	file:write("\239\187\191")
-	file:write(string.format('"Production Name","Status","Type","Fill Type","Amount (L)","Capacity (L)","Fill %%","Daily Upkeep (%s)","Monthly Revenue (%s)","Monthly Costs (%s)","Net Profit (%s)"\n',
-		currencySymbol, currencySymbol, currencySymbol, currencySymbol))
+	file:write(string.format('"Production Name","Status","Type","Fill Type","Amount (L)","Capacity (L)","Fill %%","Daily Upkeep (%s)","Monthly Revenue (%s)","Monthly Costs (%s)","Net Profit (%s)","Monthly Distributed (%s)"\n',
+		currencySymbol, currencySymbol, currencySymbol, currencySymbol, currencySymbol))
 
 	for _, prod in ipairs(self.productions) do
 		local activeCount = 0
@@ -1204,20 +1325,21 @@ function ProductionDlgFrame:onClickExportCSV()
 		local statusText = string.format("Active %d/%d", activeCount, totalCount)
 
 		for _, fillType in ipairs(prod.inputFillTypes) do
-			file:write(string.format('"%s","%s","Input","%s","%d","%d","%.2f","","","",""\n',
+			file:write(string.format('"%s","%s","Input","%s","%d","%d","%.2f","","","","",""\n',
 				prod.name or "", statusText, fillType.title or "",
 				math.floor(fillType.liters), math.floor(fillType.capacity), fillType.fillPercent))
 		end
 
 		for _, fillType in ipairs(prod.outputFillTypes) do
-			file:write(string.format('"%s","%s","Output","%s","%d","%d","%.2f","","","",""\n',
+			file:write(string.format('"%s","%s","Output","%s","%d","%d","%.2f","","","","",""\n',
 				prod.name or "", statusText, fillType.title or "",
 				math.floor(fillType.liters), math.floor(fillType.capacity), fillType.fillPercent))
 		end
 
-		file:write(string.format('"%s","%s","Finance Summary","","","","","%.2f","%d","%d","%d"\n',
+		file:write(string.format('"%s","%s","Finance Summary","","","","","%.2f","%d","%d","%d","%d"\n',
 			prod.name or "", statusText, prod.dailyUpkeep,
-			math.floor(prod.monthlyRevenue), math.floor(prod.monthlyCosts), math.floor(prod.monthlyIncome)))
+			math.floor(prod.monthlyRevenue), math.floor(prod.monthlyCosts), math.floor(prod.monthlyIncome),
+			math.floor(prod.monthlyDistributedValue)))
 
 		file:write("\n")
 	end
@@ -1316,6 +1438,8 @@ function ProductionDlgFrame:onListSelectionChanged(list, section, index)
 				self.scheduleButton:setVisible(false)
 			end
 		end
+
+		self:refreshButtonLayout()
 	end
 end
 
@@ -1349,7 +1473,23 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			end
 			cell:getAttribute("fillCapacity1"):setVisible(true)
 
-			for i = 2, 10 do
+			-- Seasonal price column: flag the peak-price month(s) for this output so
+			-- the player can schedule production/selling around them.
+			cell:getAttribute("fillIcon2"):setVisible(false)
+			if row.isPeak then
+				local peakText = g_i18n:getText("PS_PEAK_MARK")
+				if row.peakPrice ~= nil then
+					peakText = string.format("%s  %s%s/1000L", peakText,
+						currencySymbol, self:formatNumber(math.floor(row.peakPrice * 1000)))
+				end
+				cell:getAttribute("fillCapacity2"):setText(peakText)
+				cell:getAttribute("fillCapacity2"):setTextColor(0.3, 0.85, 0.3, 1)
+				cell:getAttribute("fillCapacity2"):setVisible(true)
+			else
+				cell:getAttribute("fillCapacity2"):setVisible(false)
+			end
+
+			for i = 3, 10 do
 				cell:getAttribute("fillIcon" .. i):setVisible(false)
 				cell:getAttribute("fillCapacity" .. i):setVisible(false)
 			end
@@ -1362,6 +1502,171 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			cell:getAttribute("statusText"):setVisible(false)
 			
 			for i = 1, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		-- --------------------------------------------------------
+		-- Input rows: one row per input product (icon + name + stored)
+		-- --------------------------------------------------------
+
+		if row.rowType == "input_gap" then
+			cell:getAttribute("productionName"):setText("")
+			cell:getAttribute("productionName"):setVisible(false)
+			cell:getAttribute("statusText"):setVisible(false)
+			for i = 1, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "input_empty" then
+			cell:getAttribute("productionName"):setText(prod.name)
+			cell:getAttribute("productionName"):setVisible(true)
+			cell:getAttribute("statusText"):setVisible(false)
+			cell:getAttribute("fillIcon1"):setVisible(false)
+			cell:getAttribute("fillCapacity1"):setText("-")
+			cell:getAttribute("fillCapacity1"):setTextColor(0.5, 0.5, 0.5, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+			for i = 2, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "input_row" then
+			local ft = row.fillType
+
+			if row.isFirst then
+				cell:getAttribute("productionName"):setText(prod.name)
+				cell:getAttribute("productionName"):setVisible(true)
+			else
+				cell:getAttribute("productionName"):setText("")
+				cell:getAttribute("productionName"):setVisible(false)
+			end
+			cell:getAttribute("statusText"):setVisible(false)
+
+			-- Col 1: product icon + name
+			if ft.hudOverlayFilename ~= nil and ft.hudOverlayFilename ~= "" then
+				cell:getAttribute("fillIcon1"):setImageFilename(ft.hudOverlayFilename)
+				cell:getAttribute("fillIcon1"):setVisible(true)
+			else
+				cell:getAttribute("fillIcon1"):setVisible(false)
+			end
+			cell:getAttribute("fillCapacity1"):setText(ft.title or "?")
+			cell:getAttribute("fillCapacity1"):setTextColor(1, 1, 1, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+
+			-- Col 2: stored / capacity
+			cell:getAttribute("fillIcon2"):setVisible(false)
+			cell:getAttribute("fillCapacity2"):setText(string.format("%s / %s L",
+				self:formatNumber(math.floor(ft.liters or 0)),
+				self:formatNumber(math.floor(ft.capacity or 0))))
+			cell:getAttribute("fillCapacity2"):setTextColor(1, 1, 1, 1)
+			cell:getAttribute("fillCapacity2"):setVisible(true)
+
+			for i = 3, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		-- --------------------------------------------------------
+		-- Output rows: one row per output product, with current pallet
+		-- contents and an estimated output/month figure
+		-- --------------------------------------------------------
+
+		if row.rowType == "output_gap" then
+			cell:getAttribute("productionName"):setText("")
+			cell:getAttribute("productionName"):setVisible(false)
+			cell:getAttribute("statusText"):setVisible(false)
+			for i = 1, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "output_empty" then
+			cell:getAttribute("productionName"):setText(prod.name)
+			cell:getAttribute("productionName"):setVisible(true)
+			cell:getAttribute("statusText"):setVisible(false)
+			cell:getAttribute("fillIcon1"):setVisible(false)
+			cell:getAttribute("fillCapacity1"):setText(g_i18n:getText("ui_productionDlg_outNone"))
+			cell:getAttribute("fillCapacity1"):setTextColor(1, 0.5, 0, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+			for i = 2, 10 do
+				cell:getAttribute("fillIcon" .. i):setVisible(false)
+				cell:getAttribute("fillCapacity" .. i):setVisible(false)
+			end
+			return
+		end
+
+		if row.rowType == "output_row" then
+			local ft = row.fillType
+
+			if row.isFirst then
+				cell:getAttribute("productionName"):setText(prod.name)
+				cell:getAttribute("productionName"):setVisible(true)
+			else
+				cell:getAttribute("productionName"):setText("")
+				cell:getAttribute("productionName"):setVisible(false)
+			end
+			cell:getAttribute("statusText"):setVisible(false)
+
+			-- Col 1: product icon + name
+			if ft.hudOverlayFilename ~= nil and ft.hudOverlayFilename ~= "" then
+				cell:getAttribute("fillIcon1"):setImageFilename(ft.hudOverlayFilename)
+				cell:getAttribute("fillIcon1"):setVisible(true)
+			else
+				cell:getAttribute("fillIcon1"):setVisible(false)
+			end
+			cell:getAttribute("fillCapacity1"):setText(ft.title or "?")
+			cell:getAttribute("fillCapacity1"):setTextColor(1, 1, 1, 1)
+			cell:getAttribute("fillCapacity1"):setVisible(true)
+
+			-- Col 2: stored in the production's internal storage
+			cell:getAttribute("fillIcon2"):setVisible(false)
+			cell:getAttribute("fillCapacity2"):setText(string.format("%s / %s L",
+				self:formatNumber(math.floor(ft.liters or 0)),
+				self:formatNumber(math.floor(ft.capacity or 0))))
+			cell:getAttribute("fillCapacity2"):setTextColor(1, 1, 1, 1)
+			cell:getAttribute("fillCapacity2"):setVisible(true)
+
+			-- Col 3: contents currently sitting in the farm's pallets
+			cell:getAttribute("fillIcon3"):setVisible(false)
+			if ft.palletLiters ~= nil and ft.palletLiters > 0 then
+				cell:getAttribute("fillCapacity3"):setText(string.format("%s L (%d)",
+					self:formatNumber(math.floor(ft.palletLiters)), ft.palletCount or 0))
+				cell:getAttribute("fillCapacity3"):setTextColor(0.3, 0.7, 1, 1)
+			else
+				cell:getAttribute("fillCapacity3"):setText("-")
+				cell:getAttribute("fillCapacity3"):setTextColor(0.5, 0.5, 0.5, 1)
+			end
+			cell:getAttribute("fillCapacity3"):setVisible(true)
+
+			-- Col 4: estimated output per month (pallets if a pallet size is known,
+			-- otherwise litres). Narrow column, so keep the text short.
+			cell:getAttribute("fillIcon4"):setVisible(false)
+			if ft.monthlyPallets ~= nil and ft.monthlyPallets > 0 then
+				cell:getAttribute("fillCapacity4"):setText(string.format("~%.1f/mo", ft.monthlyPallets))
+				cell:getAttribute("fillCapacity4"):setTextColor(0.6, 0.9, 0.6, 1)
+			elseif ft.monthlyLiters ~= nil and ft.monthlyLiters > 0 then
+				cell:getAttribute("fillCapacity4"):setText(string.format("~%sL/mo",
+					self:formatNumber(math.floor(ft.monthlyLiters))))
+				cell:getAttribute("fillCapacity4"):setTextColor(0.6, 0.9, 0.6, 1)
+			else
+				cell:getAttribute("fillCapacity4"):setText("-")
+				cell:getAttribute("fillCapacity4"):setTextColor(0.5, 0.5, 0.5, 1)
+			end
+			cell:getAttribute("fillCapacity4"):setVisible(true)
+
+			for i = 5, 10 do
 				cell:getAttribute("fillIcon" .. i):setVisible(false)
 				cell:getAttribute("fillCapacity" .. i):setVisible(false)
 			end
@@ -1610,8 +1915,39 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 				cell:getAttribute("fillCapacity3"):setTextColor(1, 0, 0, 1)
 			end
 			cell:getAttribute("fillCapacity3"):setVisible(true)
-			
-			for i = 4, 10 do
+
+			-- Value of output auto-delivered to other facilities. Not income, so it is
+			-- excluded from revenue/profit and shown separately.
+			cell:getAttribute("fillIcon4"):setVisible(false)
+			if prod.monthlyDistributedValue > 0 then
+				cell:getAttribute("fillCapacity4"):setText(string.format("%s%s/mo",
+					currencySymbol, self:formatNumber(math.floor(prod.monthlyDistributedValue))))
+				cell:getAttribute("fillCapacity4"):setTextColor(0.3, 0.7, 1, 1)
+			else
+				cell:getAttribute("fillCapacity4"):setText("-")
+				cell:getAttribute("fillCapacity4"):setTextColor(0.5, 0.5, 0.5, 1)
+			end
+			cell:getAttribute("fillCapacity4"):setVisible(true)
+
+			-- Best current sell price for this facility's top output, and where.
+			-- Prices shown per 1000L to match the in-game prices menu convention.
+			cell:getAttribute("fillIcon5"):setVisible(false)
+			if prod.bestSale ~= nil then
+				-- Full station name; the cell uses scrolling text layout so long
+				-- names marquee rather than truncate.
+				local station = prod.bestSale.stationName or "?"
+				cell:getAttribute("fillCapacity5"):setText(string.format("%s%s @ %s",
+					currencySymbol,
+					self:formatNumber(math.floor(prod.bestSale.pricePerLiter * 1000)),
+					station))
+				cell:getAttribute("fillCapacity5"):setTextColor(0.6, 0.9, 0.6, 1)
+			else
+				cell:getAttribute("fillCapacity5"):setText("-")
+				cell:getAttribute("fillCapacity5"):setTextColor(0.5, 0.5, 0.5, 1)
+			end
+			cell:getAttribute("fillCapacity5"):setVisible(true)
+
+			for i = 6, 10 do
 				cell:getAttribute("fillIcon" .. i):setVisible(false)
 				cell:getAttribute("fillCapacity" .. i):setVisible(false)
 			end
@@ -1678,9 +2014,56 @@ function ProductionDlgFrame:populateCellForItemInSection(list, section, index, c
 			end
 		end
 		
-		for i = 6, 10 do
-			cell:getAttribute("fillIcon" .. i):setVisible(false)
-			cell:getAttribute("fillCapacity" .. i):setVisible(false)
+		if not self.showFinances and not self.showLogistics then
+			for i = 6, 10 do
+				local fillIcon = cell:getAttribute("fillIcon" .. i)
+				local fillCapacity = cell:getAttribute("fillCapacity" .. i)
+				local dataIndex = row.startIndex + (i - 1)
+
+				if dataIndex <= #fillTypes and row.rowType == "rowN" then
+					local fillType = fillTypes[dataIndex]
+					fillCapacity:setTextColor(1, 1, 1, 1)
+					
+					if self.showRecipes then
+						local iconFilename = fillType.outputFillTypeInfo and fillType.outputFillTypeInfo.hudOverlayFilename or nil
+						
+						if iconFilename and iconFilename ~= "" then
+							fillIcon:setImageFilename(iconFilename)
+							fillIcon:setVisible(true)
+						else
+							fillIcon:setVisible(false)
+						end
+						
+						
+						local statusColor = {1, 0, 0, 1} 
+						if fillType.status == ProductionPoint.PROD_STATUS.RUNNING then
+							statusColor = {0, 1, 0, 1} 
+						elseif fillType.status == ProductionPoint.PROD_STATUS.MISSING_INPUTS then
+							statusColor = {1, 0.6, 0, 1} 
+						end
+						
+						fillCapacity:setText(fillType.name)
+						fillCapacity:setTextColor(statusColor[1], statusColor[2], statusColor[3], statusColor[4])
+						fillCapacity:setVisible(true)
+					else
+						if fillType.hudOverlayFilename ~= nil and fillType.hudOverlayFilename ~= "" then
+							fillIcon:setImageFilename(fillType.hudOverlayFilename)
+							fillIcon:setVisible(true)
+						else
+							fillIcon:setVisible(false)
+						end
+
+						local capacityText = string.format("%s / %s L", 
+							self:formatNumber(math.floor(fillType.liters)),
+							self:formatNumber(math.floor(fillType.capacity)))
+						fillCapacity:setText(capacityText)
+						fillCapacity:setVisible(true)
+					end
+				else
+					fillIcon:setVisible(false)
+					fillCapacity:setVisible(false)
+				end
+			end
 		end
 	end
 end

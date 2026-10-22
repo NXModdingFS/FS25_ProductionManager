@@ -31,6 +31,20 @@
     <text name="ui_productionDlg_hbRevenue"          text="Revenue"/>
     <text name="ui_productionDlg_hbCosts"            text="Costs"/>
     <text name="ui_productionDlg_hbProfit"           text="Net Profit"/>
+    <text name="ui_productionDlg_hbDistributed"      text="Distributed"/>
+    <text name="ui_productionDlg_hbBestPrice"        text="Best Sale (/1000L)"/>
+    <text name="ui_productionDlg_hbProduct"          text="Product"/>
+    <text name="ui_productionDlg_hbStored"           text="Stored"/>
+    <text name="ui_productionDlg_hbInPallets"        text="In Pallets"/>
+    <text name="ui_productionDlg_hbEstPerMonth"      text="Est. /mo"/>
+    <text name="ui_productionDlg_outNone"            text="No Outputs"/>
+    <!-- In-game menu tab -->
+    <text name="ui_refresh"                          text="Refresh"/>
+    <text name="ui_tab_inputs"                       text="Inputs"/>
+    <text name="ui_tab_outputs"                      text="Outputs"/>
+    <text name="ui_tab_recipes"                      text="Recipes"/>
+    <text name="ui_tab_finances"                     text="Finances"/>
+    <text name="ui_tab_logistics"                    text="Logistics"/>
     <text name="ui_productionDlg_hbRecipe"           text="Recipe"/>
     <text name="ui_productionDlg_hbCyclesPerMonth"   text="Cycles/Mo"/>
     <text name="ui_productionDlg_hbSupplyDuration"   text="Supply"/>
@@ -111,6 +125,8 @@
     <text name="PS_DIALOG_TITLE"       text="Production Schedule: %s"/>
     <text name="PS_COL_MONTH"          text="Month"/>
     <text name="PS_COL_STATE"          text="State"/>
+    <text name="PS_COL_PEAK"           text="Seasonal Price"/>
+    <text name="PS_PEAK_MARK"          text="PEAK"/>
     <text name="PS_STATE_ACTIVE"       text="Active"/>
     <text name="PS_STATE_INACTIVE"     text="Inactive"/>
     <text name="PS_BTN_ALL_TOGGLE"     text="Toggle All Months"/>
@@ -131,5 +147,248 @@
     <text name="PS_MONTH_10"  text="December"/>
     <text name="PS_MONTH_11"  text="January"/>
     <text name="PS_MONTH_12"  text="February"/>
+
+    <!-- ============================================================ -->
+    <!-- Productions Insights / Logistics (1.0.0.3)                   -->
+    <!-- ============================================================ -->
+
+    <!-- Productions Insights -->
+    <text name="pi_tab_stock" text="Stock"/>
+    <text name="pi_tab_profit" text="Profitability"/>
+    <text name="pi_tab_animals" text="Animals"/>
+    <text name="pi_tab_network" text="Network"/>
+    <text name="pi_tab_tasks" text="This Month"/>
+
+    <!-- Column headers -->
+    <text name="pi_hdr_product" text="Product"/>
+    <text name="pi_hdr_stock" text="Stock"/>
+    <text name="pi_hdr_priceNow" text="Now /1000 L"/>
+    <text name="pi_hdr_valueNow" text="Value now"/>
+    <text name="pi_hdr_bestMonth" text="Best month"/>
+    <text name="pi_hdr_bestValue" text="Best value"/>
+    <text name="pi_hdr_alert" text="Alert"/>
+    <text name="pi_hdr_facility" text="Facility"/>
+    <text name="pi_hdr_recipe" text="Recipe"/>
+    <text name="pi_hdr_cost1000" text="Cost /1000 L"/>
+    <text name="pi_hdr_value1000" text="Value /1000 L"/>
+    <text name="pi_hdr_profit1000" text="Profit /1000 L"/>
+    <text name="pi_hdr_profitMonth" text="Profit /month"/>
+    <text name="pi_hdr_source" text="Source"/>
+    <text name="pi_hdr_pen" text="Pen / group"/>
+    <text name="pi_hdr_animals" text="Animals"/>
+    <text name="pi_hdr_age" text="Age"/>
+    <text name="pi_hdr_condition" text="Health / supplies"/>
+    <text name="pi_hdr_value" text="Value"/>
+    <text name="pi_hdr_advice" text="Advice"/>
+    <text name="pi_hdr_repro" text="Repro."/>
+    <text name="pi_hdr_building" text="Building / product"/>
+    <text name="pi_hdr_role" text="Role"/>
+    <text name="pi_hdr_level" text="Level"/>
+    <text name="pi_hdr_rule" text="Rule"/>
+    <text name="pi_hdr_thisMonth" text="This month"/>
+    <text name="pi_hdr_income" text="Net"/>
+    <text name="pi_hdr_category" text="Category"/>
+    <text name="pi_hdr_task" text="Task"/>
+    <text name="pi_hdr_detail" text="Details"/>
+    <text name="pi_hdr_amount" text="Amount"/>
+    <text name="pi_hdr_count" text="Count"/>
+    <text name="pi_hdr_price1000" text="Price /1000 L"/>
+    <text name="pi_hdr_stockValue" text="Value of stock"/>
+    <text name="pi_hdr_bestMonthPrice" text="Best month /1000 L"/>
+    <text name="pi_hdr_viaRecipe" text="Via recipe /1000 L"/>
+    <text name="pi_hdr_uplift" text="Extra /1000 L"/>
+    <text name="pi_hdr_perCycle" text="Per cycle"/>
+    <text name="pi_hdr_perMonth" text="Per month"/>
+    <text name="pi_hdr_capacity" text="Capacity"/>
+    <text name="pi_hdr_fill" text="Fill"/>
+    <text name="pi_hdr_bestAge" text="Best sale age"/>
+    <text name="pi_hdr_lifetime" text="Profit if bought new"/>
+    <text name="pi_hdr_cheapest" text="Cheapest feed"/>
+    <text name="pi_hdr_weight" text="Weight"/>
+
+    <!-- Buttons -->
+    <text name="pi_btn_details" text="Details"/>
+    <text name="pi_btn_closeDetails" text="Close details"/>
+    <text name="pi_btn_filter" text="Filter"/>
+    <text name="pi_btn_sort" text="Sort"/>
+    <text name="pi_btn_alert" text="Alert in best month"/>
+    <text name="pi_btn_clearAlert" text="Clear alert"/>
+    <text name="pi_btn_mode" text="Output rule"/>
+    <text name="pi_btn_reserve" text="Reserve"/>
+    <text name="pi_btn_block" text="Block"/>
+    <text name="pi_btn_unblock" text="Unblock"/>
+    <text name="pi_btn_priority" text="Priority"/>
+    <text name="pi_btn_target" text="Fill target"/>
+    <text name="pi_btn_accept" text="Accept deliveries"/>
+    <!-- Filters and labels -->
+    <text name="pi_filter_all" text="All"/>
+    <text name="pi_filter_inStock" text="In stock"/>
+    <text name="pi_filter_allSellable" text="All sellable"/>
+    <text name="pi_sort_monthly" text="Per month"/>
+    <text name="pi_sort_per1000" text="Per 1000 L"/>
+    <text name="pi_recipeSource_owned" text="Owned"/>
+    <text name="pi_recipeSource_forSale" text="For sale"/>
+    <text name="pi_recipeSource_shop" text="Shop"/>
+    <text name="pi_nodeKind_production" text="Production"/>
+    <text name="pi_nodeKind_animals" text="Animal pen"/>
+    <text name="pi_nodeKind_silo" text="Silo / storage"/>
+    <text name="pi_source_silo" text="Silos and sheds"/>
+    <text name="pi_source_production" text="Productions"/>
+    <text name="pi_source_animals" text="Animal pens"/>
+    <text name="pi_source_pallet" text="Pallets"/>
+    <text name="pi_source_bale" text="Bales"/>
+    <text name="pi_source_objectStorage" text="Object storage"/>
+    <text name="pi_source_vehicle" text="Vehicles and trailers"/>
+    <text name="pi_total" text="Total"/>
+    <text name="pi_now" text="Now"/>
+    <text name="pi_peakNow" text="Best month!"/>
+    <text name="pi_alert_on" text="Alert set"/>
+    <text name="pi_alert_peak" text="Alert: notify in its best month"/>
+    <text name="pi_allYear" text="All year"/>
+    <text name="pi_auto" text="Automatic"/>
+    <text name="pi_missing" text="Missing"/>
+    <text name="pi_months" text="%d mo"/>
+    <text name="pi_health" text="Health %d%%"/>
+    <text name="pi_sold" text="sold %s"/>
+    <text name="pi_role_in" text="Input"/>
+    <text name="pi_role_out" text="Output"/>
+    <text name="pi_rule_blocked" text="Blocked"/>
+    <text name="pi_rule_input" text="%s, fill to %d%%"/>
+    <text name="pi_rule_reserve" text="(keep %d%%)"/>
+    <text name="pi_silo_open" text="Accepts"/>
+    <text name="pi_silo_closed" text="Closed"/>
+    <text name="pi_short_food" text="F"/>
+    <text name="pi_short_water" text="W"/>
+    <text name="pi_short_straw" text="S"/>
+    <text name="pi_supply_food" text="Food"/>
+    <text name="pi_supply_water" text="Water"/>
+    <text name="pi_supply_straw" text="Straw"/>
+
+    <!-- Detail views -->
+    <text name="pi_detail_where" text="Where it is"/>
+    <text name="pi_detail_sellPoints" text="Sell points"/>
+    <text name="pi_detail_byMonth" text="Best price by month"/>
+    <text name="pi_detail_bestUse" text="Worth more processed"/>
+    <text name="pi_detail_inputs" text="Inputs"/>
+    <text name="pi_detail_outputs" text="Outputs"/>
+    <text name="pi_detail_economics" text="Economics"/>
+    <text name="pi_detail_supplies" text="Supplies"/>
+    <text name="pi_detail_groups" text="Groups"/>
+    <text name="pi_detail_feed" text="Feed groups"/>
+    <text name="pi_eco_cycles" text="Cycles per month"/>
+    <text name="pi_eco_running" text="Running costs per month"/>
+    <text name="pi_eco_profitCycle" text="Profit per cycle"/>
+    <text name="pi_eco_profitMonth" text="Profit per month (running all month)"/>
+    <text name="pi_eco_outputMonth" text="Main output per month"/>
+    <text name="pi_eco_price" text="Purchase price"/>
+    <text name="pi_eco_payback" text="Pays for itself in"/>
+    <text name="pi_eco_feedMonth" text="Feed cost per month"/>
+    <text name="pi_eco_outputValue" text="Output value per month"/>
+    <text name="pi_eco_net" text="Net per month"/>
+    <text name="pi_pen_summary" text="%s - %d / %d animals, %d free - value %s"/>
+
+    <!-- Notes -->
+    <text name="pi_note_empty" text="Nothing to show here yet."/>
+    <text name="pi_note_error" text="This view could not be built - see log.txt."/>
+    <text name="pi_note_noStock" text="None of this product on the farm."/>
+    <text name="pi_note_noSellPoint" text="No sell point currently buys this product."/>
+    <text name="pi_note_sellDirect" text="No recipe beats selling it directly by your advice threshold."/>
+    <text name="pi_note_noAlert" text="No price alert set for this product."/>
+    <text name="pi_note_profit" text="Inputs you hold that sell somewhere are valued at their sale price; inputs you would have to buy at their shop price. Outputs use your price basis. Monthly profit assumes the recipe runs all month. * = some input prices estimated."/>
+    <text name="pi_note_shared" text="This facility shares its capacity: %d active recipes each get an equal share, so monthly figures are divided accordingly."/>
+    <text name="pi_note_estimated" text="Some prices are estimates because no sell point buys that product."/>
+    <text name="pi_note_unpricedDetail" text="No sell point buys the main product, so this recipe is not ranked."/>
+    <text name="pi_note_unpriced" text="%d recipes hidden: no sell point buys their main product, so their profit cannot be judged."/>
+    <text name="pi_note_feedSerial" text="In this pen the feed groups are alternatives: the cheapest one is used for costs."/>
+    <text name="pi_note_feedParallel" text="In this pen the feed groups are combined: costs use the weighted mix."/>
+    <text name="pi_note_animals" text="Values use this map's animal data; best sale age weighs sale value against feed until then."/>
+    <text name="pi_note_networkOff" text="Productions Logistics is off. Rules can be prepared here; switch it on in Settings."/>
+    <text name="pi_note_networkClient" text="Activity figures are tracked by the host."/>
+
+    <!-- Field states and jobs -->
+    <!-- Animal advice -->
+    <text name="pi_advice_keep" text="Keep producing"/>
+    <text name="pi_advice_sell" text="Sell now"/>
+    <text name="pi_advice_grow" text="Grow to %d mo"/>
+    <text name="pi_advice_health" text="Restore health first"/>
+    <text name="pi_advice_pastPeak" text="Past its best - sell"/>
+    <text name="pi_advice_evaluate" text="Check whether to sell"/>
+    <text name="pi_advice_ride" text="Ride and clean daily"/>
+
+    <!-- This Month -->
+    <text name="pi_hud_nothing" text="Nothing urgent"/>
+    <text name="pi_taskCat_sell" text="Sell"/>
+    <text name="pi_taskCat_collect" text="Collect"/>
+    <text name="pi_taskCat_vehicle" text="Vehicles"/>
+    <text name="pi_taskCat_animals" text="Animals"/>
+    <text name="pi_taskCat_production" text="Productions"/>
+    <text name="pi_task_alert" text="Sell %s: %s /1000 L at %s"/>
+    <text name="pi_task_peak" text="Best month to sell %s (%s in stock)"/>
+    <text name="pi_task_bales" text="Collect %d bales of %s from fields"/>
+    <text name="pi_task_vehicle" text="Unload %s: %s %s"/>
+    <text name="pi_task_supply" text="%s: %s at %s"/>
+    <text name="pi_task_health" text="%s: animals in poor health"/>
+    <text name="pi_task_lowInput" text="%s: %s low (%s)"/>
+    <text name="pi_task_fullOutput" text="%s: %s nearly full (%s)"/>
+    <!-- Notifications -->
+    <text name="pi_notify_alert" text="Price alert: %s sells for %s /1000 L at %s"/>
+    <!-- Logistics rules -->
+    <text name="pl_mode_0" text="Game default"/>
+    <text name="pl_mode_1" text="Hold"/>
+    <text name="pl_mode_2" text="Supply farm"/>
+    <text name="pl_mode_3" text="Store in silo"/>
+    <text name="pl_mode_4" text="Sell now"/>
+    <text name="pl_mode_5" text="Sell in best month"/>
+    <text name="pl_mode_6" text="Supply, sell surplus"/>
+    <text name="pl_priority_1" text="Low"/>
+    <text name="pl_priority_2" text="Normal"/>
+    <text name="pl_priority_3" text="High"/>
+
+    <!-- Settings -->
+    <text name="pi_menu_section_insights" text="Productions Insights"/>
+    <text name="pi_menu_section_logistics" text="Productions Logistics"/>
+    <text name="pi_menu_section_gameplay" text="Productions: Gameplay"/>
+    <text name="pi_setting_off" text="Off"/>
+    <text name="pi_setting_farmWide" text="Whole farm"/>
+    <text name="pi_setting_priceCurrent" text="Current price"/>
+    <text name="pi_setting_pricePeak" text="Best month price"/>
+    <text name="pi_setting_insightsAnimalThreshold" text="Animal supply warning"/>
+    <text name="pi_setting_insightsAnimalThreshold_tooltip" text="Warn when a pen's food, water or straw falls to this level. 0% warns only when empty."/>
+    <text name="pi_setting_insightsVehicleFullSize" text="Full trailer size"/>
+    <text name="pi_setting_insightsVehicleFullSize_tooltip" text="Only list full trailers and vehicles with at least this capacity."/>
+    <text name="pi_setting_insightsFreeWater" text="Free water"/>
+    <text name="pi_setting_insightsFreeWater_tooltip" text="Treat water as costing nothing in recipe and feed calculations (e.g. you fetch it from a lake)."/>
+    <text name="pi_setting_insightsPriceBasis" text="Output price basis"/>
+    <text name="pi_setting_insightsPriceBasis_tooltip" text="Value products at today's best price, or at the best price of their best month (if you store and sell then)."/>
+    <text name="pi_setting_insightsAdviceThreshold" text="Processing advice threshold"/>
+    <text name="pi_setting_insightsAdviceThreshold_tooltip" text="Only suggest a recipe when it earns at least this much more per 1000 L than selling the product directly."/>
+    <text name="pi_setting_logisticsEnabled" text="Logistics network"/>
+    <text name="pi_setting_logisticsEnabled_tooltip" text="Move products between your productions, pens and silos every in-game hour, following the rules on the Network tab."/>
+    <text name="pi_setting_logisticsScope" text="Supply range"/>
+    <text name="pi_setting_logisticsScope_tooltip" text="Whole farm, or only sources within this distance of the building that needs them."/>
+    <text name="pi_setting_logisticsIncludeAnimals" text="Include animal pens"/>
+    <text name="pi_setting_logisticsIncludeAnimals_tooltip" text="Feed, water and straw pens from the network and let their products (milk, manure ...) be supplied or sold."/>
+    <text name="pi_setting_logisticsIncludeSilos" text="Include silos and sheds"/>
+    <text name="pi_setting_logisticsIncludeSilos_tooltip" text="Let silos and sheds supply buildings and receive stored products."/>
+    <text name="pi_setting_logisticsDefaultTarget" text="Default fill target"/>
+    <text name="pi_setting_logisticsDefaultTarget_tooltip" text="How full inputs are kept unless a building has its own target."/>
+    <text name="pi_setting_logisticsTransportRate" text="Transport cost"/>
+    <text name="pi_setting_logisticsTransportRate_tooltip" text="Charged per 1000 L per km moved by the network."/>
+    <text name="pi_setting_logisticsAutoWater" text="Automatic water"/>
+    <text name="pi_setting_logisticsAutoWater_tooltip" text="Top up water for productions and pens that need it, at the water price below."/>
+    <text name="pi_setting_logisticsWaterPrice" text="Water price /1000 L"/>
+    <text name="pi_setting_logisticsWaterPrice_tooltip" text="What automatic water costs."/>
+    <text name="pi_setting_gpWaterNoValue" text="Water has no sale value"/>
+    <text name="pi_setting_gpWaterNoValue_tooltip" text="Selling stations pay nothing for water, so free lake water cannot be turned into money."/>
+    <text name="pi_setting_gpGrapeYield" text="Grape yield"/>
+    <text name="pi_setting_gpGrapeYield_tooltip" text="Multiply the litres harvested from grapes."/>
+    <text name="pi_setting_gpOliveYield" text="Olive yield"/>
+    <text name="pi_setting_gpOliveYield_tooltip" text="Multiply the litres harvested from olives."/>
+    <text name="pi_setting_gpHorseValue" text="Horse value"/>
+    <text name="pi_setting_gpHorseValue_tooltip" text="Multiply the sale value of horses."/>
+    <text name="pi_setting_gpPigValue" text="Pig value"/>
+    <text name="pi_setting_gpPigValue_tooltip" text="Multiply the sale value of pigs."/>
+    <text name="pi_setting_gpBeefValue" text="Beef cattle value"/>
+    <text name="pi_setting_gpBeefValue_tooltip" text="Multiply the sale value of cattle that give no milk. Dairy cows are unchanged."/>
   </texts>
 </l10n>
