@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="105">
     <author>NX Modding</author>
-    <version>1.0.0.1</version>
+    <version>1.0.0.3</version>
     <title>
         <en>Productions Manager</en>
         <de>Produktionsmanager</de>
@@ -19,11 +19,49 @@ Features:
 • Auto-Management: Automatically activate/deactivate productions based on input availability and output capacity
 • Smart Notifications: Get alerts when productions stop/start or when inputs are low/outputs are high
 • CSV Export: Export all production data for external analysis
+• New tabs: Stock, Profitability, Animals, Network and This Month
+• Productions Logistics: optional demand-driven supply network between productions, pens and silos
 • Multi-Language Support: Available in 3 languages
 
-Press Right Shift + P to open the Production Overview.
+Open the in-game menu (ESC) and select the Productions Manager tab.
 
-Logo: MarkThor
+NEW in 1.0.0.3 - five new tabs in the Productions Manager screen:
+• Stock: everything your farm owns in silos, productions, animal pens, vehicles, pallets, bales and object storage, valued at the best sell point now and at its best month. Drill down for storage locations, every sell point, a month-by-month price table and processing advice (which recipe earns more than selling raw).
+• Price alerts: get notified when a product reaches its best month to sell.
+• Profitability: every recipe from your productions, productions for sale on the map and production buildings in the shop, compared by cost, value and profit per 1000 L and per month, including payback time.
+• Animals: every group with age, health, value and advice (keep, grow to N months, sell, restore health), plus pen supplies, feed economics and output per month.
+• This Month: a list of what needs doing now - alerts, best-month sales, bales on fields, full trailers, animal supplies and production inputs/outputs.
+
+NEW - Productions Logistics (optional, off by default):
+• A demand-driven supply network between your productions, animal pens and silos, run every in-game hour.
+• Per product rules on the Network tab: supply, store, hold, sell now, sell in the best month, or supply and sell the surplus; keep a reserve; block, prioritise or set a fill target on inputs.
+• Nearest source first, farm-wide or within a radius; automatic feed, straw and water; transport cost per 1000 L per km; monthly activity per building.
+
+NEW - Optional gameplay settings (off by default, host-controlled in multiplayer): water with no sale value, grape and olive yield multipliers, horse / pig / beef cattle value multipliers.
+
+Version History:
+• 1.0.0.3 (Latest)
+  - Added Productions Insights, Productions Logistics and the optional gameplay settings described above
+  - Settings are now defined in one place; only host-wide settings are synced, display preferences stay personal, and joining players receive the host's settings
+  - Finance Fix: running costs now use the game's monthly production cost instead of hourly cost x 24 x days per month, which overstated costs on saves with more than one day per month
+
+• 1.0.0.2
+  - Bug Fixes: manual Activate/Deactivate now uses the correct production id (fixes "setProductionState(): unknown productionId" error) and no longer flickers the recipe status
+  - Finance Fixes: monthly revenue now reflects output actually produced per month (not current stock value), costs use days-per-period instead of the game-speed multiplier, idle facilities no longer accrue active-hour costs
+  - Finance: revenue now uses the best real sell price from selling stations (showing which station pays most per output); auto-delivered output is shown in a separate "Distributed" column rather than counted as income; both added to CSV export
+  - Schedule: the month list now marks each output's seasonal peak-price month(s), so you can schedule around them
+  - UI Fix: page headers could get out of sync with the table when switching pages quickly; the header now always matches the page being shown
+  - UI Fix: footer buttons no longer overlap when switching pages quickly; button order is now consistent (navigation grouped, contextual actions at the end)
+  - Outputs: the Outputs page now lists one row per product showing internal storage, contents currently in farm pallets, and an estimated output per month (pallets where a pallet size is known, otherwise litres)
+
+• 1.0.0.1
+  - Bug Fixes: input/output recipe page ghosting issues, row display building error
+  - Reported by WolfieFarming thanks Mate
+
+• 1.0.0.0
+  - Bug Fixes: location/status column clipping, Facility column spelling, status update behavior when inputs are missing, activation/reactivation fixes for extended recipe names
+  - Updates: improved color coordination for extended recipe names, recipe status colors now match logistics page, recipe status legend added
+  - Notification System: smart control actions, low/high input/output notifications, configurable thresholds, display duration 2-10 seconds
 ]]></en>
 
         <de><![CDATA[Umfassendes Produktionsverwaltungssystem für Landwirtschafts-Simulator 25.
@@ -39,9 +77,42 @@ Funktionen:
 • CSV-Export: Alle Produktionsdaten für externe Analyse exportieren
 • Mehrsprachige Unterstützung: In 3 Sprachen verfügbar
 
-Drücken Sie Rechte Umschalttaste + P, um die Produktionsübersicht zu öffnen.
+Öffnen Sie das Spielmenü (ESC) und wählen Sie den Tab Produktionsmanager.
 
-Logo: MarkThor
+NEU in 1.0.0.3 - fünf neue Tabs im Produktionsmanager:
+• Bestand: alles, was Ihr Hof besitzt (Silos, Produktionen, Ställe, Fahrzeuge, Paletten, Ballen, Objektlager), bewertet zum besten aktuellen Preis und im besten Monat; Details mit Lagerorten, Verkaufsstellen, Monatspreisen und Verarbeitungsempfehlung.
+• Preisalarme: benachrichtigt werden, wenn ein Produkt seinen besten Verkaufsmonat erreicht.
+• Rentabilität: alle Rezepte eigener, zum Verkauf stehender und im Shop erhältlicher Produktionen im Vergleich (Kosten, Wert, Gewinn pro 1000 L und pro Monat, Amortisation).
+• Tiere: jede Gruppe mit Alter, Gesundheit, Wert und Empfehlung, dazu Vorräte, Futterkosten und Erzeugung pro Monat.
+• Dieser Monat: Liste mit allem, was jetzt ansteht.
+
+NEU - Produktions-Logistik (optional, standardmäßig aus): bedarfsgesteuertes Versorgungsnetz zwischen Produktionen, Ställen und Silos mit Regeln pro Produkt (liefern, einlagern, halten, verkaufen, im besten Monat verkaufen, Reserve, Sperren, Priorität, Füllziel), Transportkosten und Monatsstatistik.
+
+NEU - Optionale Spieleinstellungen (standardmäßig aus): Wasser ohne Verkaufswert, Ertragsfaktor Trauben/Oliven, Wertfaktoren für Pferde, Schweine und Mastrinder.
+
+Versionsverlauf:
+• 1.0.0.3 (Neueste Version)
+  - Produktions-Einblicke, Produktions-Logistik und optionale Spieleinstellungen hinzugefügt
+  - Finanzkorrektur: Betriebskosten nutzen jetzt die monatlichen Produktionskosten des Spiels statt Stundenkosten x 24 x Tage pro Monat, was die Kosten bei mehr als einem Tag pro Monat zu hoch auswies
+
+• 1.0.0.2
+  - Fehlerbehebungen: Manuelles Aktivieren/Deaktivieren verwendet jetzt die korrekte Produktions-ID (behebt den Fehler "setProductionState(): unknown productionId") und der Rezeptstatus flackert nicht mehr
+  - Finanzkorrekturen: Monatliche Einnahmen spiegeln jetzt die tatsächlich pro Monat produzierte Ausgabe wider (nicht den aktuellen Lagerwert), Kosten verwenden Tage pro Periode statt des Spielgeschwindigkeits-Multiplikators, inaktive Anlagen verursachen keine Aktivstundenkosten mehr
+  - Finanzen: Einnahmen verwenden jetzt den besten tatsächlichen Verkaufspreis der Verkaufsstationen (und zeigen, welche Station pro Ausgabe am meisten zahlt); automatisch gelieferte Ausgaben werden in einer separaten Spalte "Verteilt" angezeigt, statt als Einkommen gezählt zu werden; beide zum CSV-Export hinzugefügt
+  - Zeitplan: Die Monatsliste markiert jetzt die saisonalen Höchstpreismonate jeder Ausgabe, damit Sie entsprechend planen können
+  - UI-Fix: Die Spaltenüberschriften konnten beim schnellen Wechseln der Seiten von der Tabelle abweichen; die Überschrift passt jetzt immer zur angezeigten Seite
+  - UI-Fix: Die Fußzeilen-Schaltflächen überlappen beim schnellen Seitenwechsel nicht mehr; die Reihenfolge ist jetzt einheitlich (Navigation gruppiert, kontextbezogene Aktionen am Ende)
+  - Ausgaben: Die Ausgabenseite zeigt jetzt eine Zeile pro Produkt mit internem Lager, aktuellem Paletteninhalt und geschätzter Ausgabe pro Monat (Paletten, wenn eine Palettengröße bekannt ist, sonst Liter)
+
+• 1.0.0.1
+  - Fehlerbehebungen: Ein-/Ausgabe-Rezeptseite-Geistereffekte, Zeilenanzeige-Build-Fehler
+  - Gemeldet von WolfieFarming, danke Mate
+
+• 1.0.0.0
+  - Fehlerbehebungen: Überlappung von Standort- und Statusspalte, Rechtschreibung in der Facility-Spalte, Statusaktualisierung bei fehlenden Eingaben, Aktivierungsverhalten bei Rezepten mit langen Namen
+  - Updates: bessere Farbkoordination für verlängerte Rezeptnamen, Rezeptstatusfarben entsprechen jetzt der Logistikseite, Rezeptstatus-Legende hinzugefügt
+  - Benachrichtigungssystem: intelligente Steuerungsaktionen, Niedrig/hoch Eingangs-/Ausgangsbenachrichtigungen, einstellbare Schwellenwerte, Anzeigezeit 2-10 Sekunden
+
 ]]></de>
 
         <fr><![CDATA[Système complet de gestion des productions pour Farming Simulator 25.
@@ -57,9 +128,42 @@ Fonctionnalités:
 • Export CSV: Exportez toutes les données de production pour analyse externe
 • Support multilingue: Disponible en 3 langues
 
-Appuyez sur Maj Droite + P pour ouvrir l'aperçu des productions.
+Ouvrez le menu de jeu (ESC) et sélectionnez l'onglet Gestionnaire de Production.
 
-Logo: MarkThor
+NOUVEAU en 1.0.0.3 - cinq nouveaux onglets dans le Gestionnaire de Production :
+• Stock : tout ce que possède votre ferme (silos, productions, enclos, véhicules, palettes, balles, stockage d'objets), valorisé au meilleur prix actuel et au meilleur mois ; détail des emplacements, points de vente, prix mois par mois et conseils de transformation.
+• Alertes de prix : notification quand un produit atteint son meilleur mois de vente.
+• Rentabilité : toutes les recettes des productions possédées, à vendre et de la boutique, comparées (coût, valeur, bénéfice par 1000 L et par mois, amortissement).
+• Animaux : chaque groupe avec âge, santé, valeur et conseil, plus réserves, coût d'alimentation et production mensuelle.
+• Ce mois-ci : liste des tâches urgentes.
+
+NOUVEAU - Logistique de production (optionnelle, désactivée par défaut) : réseau d'approvisionnement selon la demande entre productions, enclos et silos, avec règles par produit (livrer, stocker, garder, vendre, vendre au meilleur mois, réserve, blocage, priorité, objectif de remplissage), coût de transport et statistiques mensuelles.
+
+NOUVEAU - Réglages de jeu optionnels (désactivés par défaut) : eau sans valeur de vente, multiplicateur de rendement raisin/olive, multiplicateurs de valeur chevaux, porcs et bovins à viande.
+
+Historique des versions:
+• 1.0.0.3 (Dernière version)
+  - Ajout des Analyses de production, de la Logistique de production et des réglages de jeu optionnels
+  - Correction financière : les coûts de fonctionnement utilisent désormais le coût mensuel de production du jeu au lieu du coût horaire x 24 x jours par mois, qui surestimait les coûts avec plus d'un jour par mois
+
+• 1.0.0.2
+  - Corrections : l'activation/désactivation manuelle utilise désormais le bon identifiant de production (corrige l'erreur "setProductionState(): unknown productionId") et le statut de la recette ne clignote plus
+  - Corrections financières : les revenus mensuels reflètent désormais la production réellement fabriquée par mois (et non la valeur du stock actuel), les coûts utilisent les jours par période au lieu du multiplicateur de vitesse de jeu, les installations inactives n'accumulent plus de coûts horaires actifs
+  - Finances : les revenus utilisent désormais le meilleur prix de vente réel des points de vente (en indiquant quelle station paie le plus par sortie) ; les sorties livrées automatiquement sont affichées dans une colonne séparée « Distribué » au lieu d'être comptées comme revenu ; les deux ajoutées à l'export CSV
+  - Planification : la liste des mois marque désormais le(s) mois de prix saisonnier maximal de chaque sortie, pour planifier en conséquence
+  - Correction UI : les en-têtes de colonnes pouvaient se désynchroniser du tableau lors d'un changement rapide de page ; l'en-tête correspond désormais toujours à la page affichée
+  - Correction UI : les boutons du pied de page ne se chevauchent plus lors d'un changement rapide de page ; l'ordre est désormais cohérent (navigation regroupée, actions contextuelles à la fin)
+  - Sorties : la page Sorties affiche désormais une ligne par produit avec le stock interne, le contenu actuel des palettes de la ferme et une estimation de production par mois (palettes si la taille de palette est connue, sinon litres)
+
+• 1.0.0.1
+  - Corrections : problèmes de ghosting sur la page recette entrée/sortie, erreur d'affichage des lignes
+  - Signalé par WolfieFarming merci Mate
+  
+• 1.0.0.0
+  - Corrections : chevauchement colonne emplacement/statut, faute d'orthographe dans la colonne Facility, mise à jour du statut en cas d'entrées manquantes, comportement d'activation/réactivation des recettes aux noms étendus
+  - Mises à jour : meilleure coordination des couleurs pour noms de recettes étendus, couleurs des statuts de recette alignées sur la page logistique, légende des statuts de recette ajoutée
+  - Système de notifications : actions de contrôle intelligent, alertes entrée/sortie bas/haut, seuils configurables, durée d'affichage 2-10 secondes
+
 ]]></fr>
     </description>
     
@@ -67,19 +171,23 @@ Logo: MarkThor
     <iconFilename>icon_ProductionsOverview.dds</iconFilename>
     <multiplayer supported="true" />
     <extraSourceFiles>
-        <sourceFile filename="ProductionOverview.lua" />
-        <sourceFile filename="RegisterPlayerActionEvents.lua" />
+        <sourceFile filename="core/ProductionCommon.lua" />
+        <sourceFile filename="core/ProductionMarketData.lua" />
+        <sourceFile filename="core/ProductionPalletData.lua" />
         <sourceFile filename="core/ProductionNotifications.lua" />
         <sourceFile filename="core/ProductionSettings.lua" />
         <sourceFile filename="core/ProductionAutoManager.lua" />
         <sourceFile filename="core/ProductionScheduleManager.lua" />
+        <sourceFile filename="core/ProductionStock.lua" />
+        <sourceFile filename="core/ProductionRecipes.lua" />
+        <sourceFile filename="core/ProductionAnimals.lua" />
+        <sourceFile filename="core/ProductionUserData.lua" />
+        <sourceFile filename="core/ProductionTasks.lua" />
+        <sourceFile filename="core/ProductionGameplay.lua" />
+        <sourceFile filename="core/ProductionLogistics.lua" />
+        <sourceFile filename="core/ProductionRuntime.lua" />
+        <!-- Last: sources the GUI files, which use the core modules above -->
+        <sourceFile filename="ProductionOverview.lua" />
     </extraSourceFiles>
-    <actions>
-        <action name="SHOW_PRODUCTION_DLG" category="SYSTEM" />
-    </actions>  
-    <inputBinding>
-        <actionBinding action="SHOW_PRODUCTION_DLG">
-            <binding device="KB_MOUSE_DEFAULT" input="KEY_rshift KEY_p" />
-        </actionBinding>
-    </inputBinding> 
+
 </modDesc>
